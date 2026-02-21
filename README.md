@@ -70,6 +70,26 @@ References: [ACCA Manual J](https://www.acca.org/bookstore/product/manual-j-resi
 
 ---
 
+## Energy Efficiency Recommendations
+
+ThermalScan generates context-aware recommendations based on your specific scan inputs, not generic advice:
+
+| Condition Detected | Recommendation | Estimated Impact |
+|---|---|---|
+| South/West-facing windows + Poor/Average insulation | Low-e window film installation | 25-30% reduction in solar heat gain through glazing |
+| Poor insulation quality | Upgrade attic insulation to R-49 | 1.0-1.5 kW peak cooling load reduction |
+| Any scan (universal) | Aerosol duct sealing to less than 4% leakage | Recovers 15-20% of lost conditioned air |
+| Ceiling height over 10 ft | Ceiling fan installation for destratification | Reduces stratification losses, improves HVAC efficiency |
+| Window area over 30% of floor area | Thermal curtains on largest windows | Estimated 10-15% reduction in window heat gain |
+
+These recommendations are grounded in ASHRAE standards, ACCA Manual J methodology, and real-world energy audit data from LADWP Commercial Lighting Incentive Program (CLIP) assessments.
+
+### Why This Matters for Distributed Energy
+
+An inefficient building envelope directly cannibalizes the value of home battery systems. A standard, poorly insulated home draws 5-6 kW on a summer afternoon, leaving a home battery exporting barely half its rated output during peak grid events. Reducing parasitic home loads by even 1.5-2 kW through passive efficiency upgrades means 30-40% more exportable capacity from the same hardware, with zero additional battery cost.
+
+---
+
 ## Screenshots
 
 > _Coming soon_
