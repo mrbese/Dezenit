@@ -7,35 +7,38 @@ struct HomeReportView: View {
         GradingEngine.grade(for: home.equipment)
     }
 
-    private var upgrades: [UpgradeItem] {
+    private var sqFt: Double {
+        home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500
+    }
+
+    // All upgrade recommendations grouped by equipment
+    private var allUpgradesByEquipment: [(equipment: Equipment, upgrades: [UpgradeRecommendation])] {
         home.equipment.compactMap { eq in
-            let spec = EfficiencyDatabase.lookup(type: eq.typeEnum, age: eq.ageRangeEnum)
-            let savings = EfficiencyDatabase.estimateAnnualSavings(
-                type: eq.typeEnum,
-                currentEfficiency: eq.estimatedEfficiency,
-                targetEfficiency: spec.bestInClass,
-                homeSqFt: home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500,
-                climateZone: home.climateZoneEnum
+            let ups = UpgradeEngine.generateUpgrades(
+                for: eq, climateZone: home.climateZoneEnum, homeSqFt: sqFt
             )
-            guard savings > 10 else { return nil }
-            let payback = EfficiencyDatabase.paybackYears(upgradeCost: spec.upgradeCost, annualSavings: savings)
-            return UpgradeItem(
-                equipment: eq,
-                annualSavings: savings,
-                upgradeCost: spec.upgradeCost,
-                paybackYears: payback,
-                targetEfficiency: spec.bestInClass
-            )
-        }.sorted { ($0.paybackYears ?? 999) < ($1.paybackYears ?? 999) }
+            guard !ups.isEmpty else { return nil }
+            // Only include if at least one tier has meaningful savings
+            let bestTier = ups.first(where: { $0.tier == .best })
+            guard (bestTier?.annualSavings ?? 0) > 10 else { return nil }
+            return (equipment: eq, upgrades: ups)
+        }.sorted { a, b in
+            let aPB = a.upgrades.first(where: { $0.tier == .best })?.paybackYears ?? 999
+            let bPB = b.upgrades.first(where: { $0.tier == .best })?.paybackYears ?? 999
+            return aPB < bPB
+        }
+    }
+
+    // Best-tier recommendations only (for summary stats)
+    private var bestTierRecommendations: [UpgradeRecommendation] {
+        allUpgradesByEquipment.compactMap { $0.upgrades.first(where: { $0.tier == .best }) }
     }
 
     private var totalCurrentCost: Double {
         home.equipment.reduce(0) { sum, eq in
             sum + EfficiencyDatabase.estimateAnnualCost(
-                type: eq.typeEnum,
-                efficiency: eq.estimatedEfficiency,
-                homeSqFt: home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500,
-                climateZone: home.climateZoneEnum
+                type: eq.typeEnum, efficiency: eq.estimatedEfficiency,
+                homeSqFt: sqFt, climateZone: home.climateZoneEnum
             )
         }
     }
@@ -44,16 +47,18 @@ struct HomeReportView: View {
         home.equipment.reduce(0) { sum, eq in
             let spec = EfficiencyDatabase.lookup(type: eq.typeEnum, age: eq.ageRangeEnum)
             return sum + EfficiencyDatabase.estimateAnnualCost(
-                type: eq.typeEnum,
-                efficiency: spec.bestInClass,
-                homeSqFt: home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500,
-                climateZone: home.climateZoneEnum
+                type: eq.typeEnum, efficiency: spec.bestInClass,
+                homeSqFt: sqFt, climateZone: home.climateZoneEnum
             )
         }
     }
 
     private var totalSavings: Double {
         max(totalCurrentCost - totalUpgradedCost, 0)
+    }
+
+    private var taxCredits: (total25C: Double, total25D: Double, grandTotal: Double) {
+        UpgradeEngine.aggregateTaxCredits(from: allUpgradesByEquipment.map(\.upgrades))
     }
 
     var body: some View {
@@ -63,8 +68,12 @@ struct HomeReportView: View {
                 if !home.equipment.isEmpty {
                     costSection
                 }
-                if !upgrades.isEmpty {
+                if !allUpgradesByEquipment.isEmpty {
+                    upgradeSummaryStats
                     upgradesSection
+                }
+                if taxCredits.grandTotal > 0 {
+                    taxCreditSection
                 }
                 batterySynergySection
                 shareSection
@@ -184,6 +193,48 @@ struct HomeReportView: View {
         .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
     }
 
+    // MARK: - Upgrade Summary Stats
+
+    private var upgradeSummaryStats: some View {
+        let totalSav = bestTierRecommendations.reduce(0.0) { $0 + $1.annualSavings }
+        let totalCostLow = bestTierRecommendations.reduce(0.0) { $0 + $1.costLow }
+        let totalCostHigh = bestTierRecommendations.reduce(0.0) { $0 + $1.costHigh }
+        let totalCredits = taxCredits.grandTotal
+        let afterCreditsLow = max(totalCostLow - totalCredits, 0)
+        let afterCreditsHigh = max(totalCostHigh - totalCredits, 0)
+        let avgPayback = totalSav > 0 ? ((totalCostLow + totalCostHigh) / 2) / totalSav : 0
+        let afterCreditsPayback = totalSav > 0 ? ((afterCreditsLow + afterCreditsHigh) / 2) / totalSav : 0
+
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("Upgrade Investment Summary")
+                .font(.headline)
+
+            statRow("Total potential savings", "$\(Int(totalSav).formatted())/yr", color: .green)
+            statRow("Total investment range", "$\(Int(totalCostLow).formatted()) – $\(Int(totalCostHigh).formatted())", color: .primary)
+            statRow("Average payback period", String(format: "%.1f years", avgPayback), color: avgPayback < 5 ? .green : .orange)
+
+            if totalCredits > 0 {
+                Divider()
+                statRow("After tax credits", "$\(Int(afterCreditsLow).formatted()) – $\(Int(afterCreditsHigh).formatted())", color: .blue)
+                statRow("Effective payback", String(format: "%.1f years", afterCreditsPayback), color: afterCreditsPayback < 5 ? .green : .orange)
+            }
+        }
+        .padding(16)
+        .background(.background, in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+    }
+
+    private func statRow(_ label: String, _ value: String, color: Color) -> some View {
+        HStack {
+            Text(label)
+                .font(.subheadline)
+            Spacer()
+            Text(value)
+                .font(.subheadline.bold())
+                .foregroundStyle(color)
+        }
+    }
+
     // MARK: - Upgrades
 
     private var upgradesSection: some View {
@@ -191,73 +242,162 @@ struct HomeReportView: View {
             Text("Prioritized Upgrades")
                 .font(.headline)
 
-            Text("Sorted by payback period (shortest first)")
+            Text("Sorted by payback period. Tap to see all tiers.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            ForEach(upgrades) { item in
-                upgradeRow(item)
+            ForEach(Array(allUpgradesByEquipment.enumerated()), id: \.offset) { _, item in
+                upgradeEquipmentRow(item.equipment, upgrades: item.upgrades)
             }
         }
     }
 
-    private func upgradeRow(_ item: UpgradeItem) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: item.equipment.typeEnum.icon)
-                    .foregroundStyle(Constants.accentColor)
-                    .frame(width: 24)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.equipment.typeEnum.rawValue)
-                        .font(.subheadline.bold())
-                    Text("Current: \(String(format: "%.1f", item.equipment.estimatedEfficiency)) \(item.equipment.typeEnum.efficiencyUnit)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                if let pb = item.paybackYears {
-                    priorityBadge(payback: pb)
+    private func upgradeEquipmentRow(_ eq: Equipment, upgrades: [UpgradeRecommendation]) -> some View {
+        let best = upgrades.first(where: { $0.tier == .best })
+
+        return DisclosureGroup {
+            VStack(spacing: 8) {
+                ForEach(upgrades) { rec in
+                    tierCard(rec)
                 }
             }
-
-            HStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Savings")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text("$\(Int(item.annualSavings))/yr")
-                        .font(.caption.bold())
-                        .foregroundStyle(.green)
-                }
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Cost")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text("$\(Int(item.upgradeCost).formatted())")
-                        .font(.caption.bold())
-                }
-                if let pb = item.paybackYears {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Payback")
-                            .font(.caption2)
+            .padding(.top, 4)
+        } label: {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: eq.typeEnum.icon)
+                        .foregroundStyle(Constants.accentColor)
+                        .frame(width: 24)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(eq.typeEnum.rawValue)
+                            .font(.subheadline.bold())
+                        Text("Current: \(String(format: "%.1f", eq.estimatedEfficiency)) \(eq.typeEnum.efficiencyUnit)")
+                            .font(.caption)
                             .foregroundStyle(.secondary)
-                        Text(String(format: "%.1f yr", pb))
-                            .font(.caption.bold())
+                    }
+                    Spacer()
+                    if let b = best, let pb = b.paybackYears {
+                        priorityBadge(payback: pb)
                     }
                 }
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Target")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text("\(String(format: "%.1f", item.targetEfficiency)) \(item.equipment.typeEnum.efficiencyUnit)")
-                        .font(.caption.bold())
-                        .foregroundStyle(.green)
+
+                if let b = best {
+                    HStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Best Savings")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                            Text("$\(Int(b.annualSavings))/yr")
+                                .font(.caption.bold())
+                                .foregroundStyle(.green)
+                        }
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Cost Range")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                            Text("$\(Int(b.costLow).formatted())–$\(Int(b.costHigh).formatted())")
+                                .font(.caption.bold())
+                        }
+                        if let pb = b.paybackYears {
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text("Payback")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                Text(String(format: "%.1f yr", pb))
+                                    .font(.caption.bold())
+                            }
+                        }
+                        if b.taxCreditEligible && b.taxCreditAmount > 0 {
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text("Credit")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                Text("$\(Int(b.taxCreditAmount))")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+                    }
                 }
             }
         }
         .padding(14)
         .background(.background, in: RoundedRectangle(cornerRadius: 14))
         .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+    }
+
+    private func tierCard(_ rec: UpgradeRecommendation) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                tierBadge(rec.tier)
+                Text(rec.title)
+                    .font(.caption.bold())
+                Spacer()
+            }
+
+            if rec.alreadyMeetsThisTier {
+                Text("Your equipment already meets this tier")
+                    .font(.caption2)
+                    .foregroundStyle(.green)
+            }
+
+            Text(rec.explanation)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: 12) {
+                VStack(alignment: .leading) {
+                    Text("Cost")
+                        .font(.caption2).foregroundStyle(.secondary)
+                    Text("$\(Int(rec.costLow).formatted())–$\(Int(rec.costHigh).formatted())")
+                        .font(.caption2.bold())
+                }
+                if rec.annualSavings > 0 {
+                    VStack(alignment: .leading) {
+                        Text("Savings")
+                            .font(.caption2).foregroundStyle(.secondary)
+                        Text("$\(Int(rec.annualSavings))/yr")
+                            .font(.caption2.bold()).foregroundStyle(.green)
+                    }
+                }
+                if let pb = rec.paybackYears {
+                    VStack(alignment: .leading) {
+                        Text("Payback")
+                            .font(.caption2).foregroundStyle(.secondary)
+                        Text(String(format: "%.1f yr", pb))
+                            .font(.caption2.bold())
+                    }
+                }
+                if rec.taxCreditEligible && rec.taxCreditAmount > 0 {
+                    VStack(alignment: .leading) {
+                        Text("Tax Credit")
+                            .font(.caption2).foregroundStyle(.secondary)
+                        Text("$\(Int(rec.taxCreditAmount))")
+                            .font(.caption2.bold()).foregroundStyle(.blue)
+                    }
+                }
+            }
+        }
+        .padding(10)
+        .background(tierBackgroundColor(rec.tier).opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
+    }
+
+    private func tierBadge(_ tier: UpgradeTier) -> some View {
+        Text(tier.rawValue)
+            .font(.system(size: 9, weight: .bold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 2)
+            .background(tierBackgroundColor(tier), in: Capsule())
+    }
+
+    private func tierBackgroundColor(_ tier: UpgradeTier) -> Color {
+        switch tier {
+        case .good: return .blue
+        case .better: return .orange
+        case .best: return .green
+        }
     }
 
     private func priorityBadge(payback: Double) -> some View {
@@ -275,6 +415,66 @@ struct HomeReportView: View {
             .background(color.opacity(0.12), in: Capsule())
     }
 
+    // MARK: - Tax Credit Summary
+
+    private var taxCreditSection: some View {
+        let credits = taxCredits
+
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "building.columns.fill")
+                    .foregroundStyle(.blue)
+                Text("Federal Tax Credits")
+                    .font(.headline)
+            }
+
+            if credits.total25C > 0 {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("IRS Section 25C — Energy Efficient Home Improvement")
+                        .font(.caption.bold())
+                    Text("Eligible credits: $\(Int(credits.total25C))")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.blue)
+                    Text("Annual cap: $3,200 per year")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            if credits.total25D > 0 {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("IRS Section 25D — Residential Clean Energy (30%)")
+                        .font(.caption.bold())
+                    Text("Eligible credits: $\(Int(credits.total25D))")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.blue)
+                    Text("No annual cap")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Divider()
+
+            HStack {
+                Text("Total Potential Credits")
+                    .font(.subheadline.bold())
+                Spacer()
+                Text("$\(Int(credits.grandTotal).formatted())")
+                    .font(.title3.bold())
+                    .foregroundStyle(.blue)
+            }
+
+            Text("Tax credits are subject to eligibility requirements and may change. Consult a qualified tax professional before making purchasing decisions based on tax incentives.")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .background(.background, in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+    }
+
     // MARK: - Battery Synergy
 
     private var batterySynergySection: some View {
@@ -286,10 +486,15 @@ struct HomeReportView: View {
                     .font(.headline)
             }
 
-            let sqFt = home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500
-            let currentBaseLoad = sqFt * 5.0 / 1500.0 // ~5kW for 1500 sq ft baseline
+            let currentBaseLoad = sqFt * 5.0 / 1500.0
             let savingsRatio = totalSavings > 0 ? totalSavings / max(totalCurrentCost, 1) : 0.15
-            let upgradedBaseLoad = currentBaseLoad * (1.0 - savingsRatio * 0.6)
+
+            // Factor in insulation + HVAC upgrade load reductions from recommendations
+            let hasInsulationUpgrade = allUpgradesByEquipment.contains { $0.equipment.typeEnum == .insulation }
+            let hasHVACUpgrade = allUpgradesByEquipment.contains { [.centralAC, .heatPump, .furnace].contains($0.equipment.typeEnum) }
+            let bonusReduction = (hasInsulationUpgrade ? 0.05 : 0) + (hasHVACUpgrade ? 0.08 : 0)
+            let totalReduction = min(savingsRatio * 0.6 + bonusReduction, 0.5)
+            let upgradedBaseLoad = currentBaseLoad * (1.0 - totalReduction)
             let exportGain = currentBaseLoad - upgradedBaseLoad
 
             VStack(alignment: .leading, spacing: 8) {
@@ -363,30 +568,33 @@ struct HomeReportView: View {
             parts.append("")
         }
 
-        if !upgrades.isEmpty {
-            parts.append("PRIORITIZED UPGRADES")
+        if !allUpgradesByEquipment.isEmpty {
+            parts.append("PRIORITIZED UPGRADES (Best Tier)")
             parts.append("-".repeated(30))
-            for item in upgrades {
-                let pb = item.paybackYears.map { String(format: "%.1f yr payback", $0) } ?? "N/A"
-                parts.append("- \(item.equipment.typeEnum.rawValue): $\(Int(item.annualSavings))/yr savings, $\(Int(item.upgradeCost)) cost, \(pb)")
+            for item in allUpgradesByEquipment {
+                if let best = item.upgrades.first(where: { $0.tier == .best }) {
+                    let pb = best.paybackYears.map { String(format: "%.1f yr payback", $0) } ?? "N/A"
+                    let credit = best.taxCreditEligible ? " (tax credit: $\(Int(best.taxCreditAmount)))" : ""
+                    parts.append("- \(item.equipment.typeEnum.rawValue): \(best.title)")
+                    parts.append("  $\(Int(best.annualSavings))/yr savings, $\(Int(best.costLow))-$\(Int(best.costHigh)) cost, \(pb)\(credit)")
+                }
             }
+            parts.append("")
+        }
+
+        let credits = taxCredits
+        if credits.grandTotal > 0 {
+            parts.append("TAX CREDITS")
+            parts.append("-".repeated(30))
+            if credits.total25C > 0 { parts.append("Section 25C: $\(Int(credits.total25C))") }
+            if credits.total25D > 0 { parts.append("Section 25D: $\(Int(credits.total25D))") }
+            parts.append("Total Potential Credits: $\(Int(credits.grandTotal))")
             parts.append("")
         }
 
         parts.append("Generated by Dezenit | dezenit.com | Built by Omer Bese")
         return parts.joined(separator: "\n")
     }
-}
-
-// MARK: - Models
-
-private struct UpgradeItem: Identifiable {
-    let id = UUID()
-    let equipment: Equipment
-    let annualSavings: Double
-    let upgradeCost: Double
-    let paybackYears: Double?
-    let targetEfficiency: Double
 }
 
 // MARK: - String helper

@@ -8,18 +8,12 @@ struct EquipmentResultView: View {
         EfficiencyDatabase.lookup(type: equipment.typeEnum, age: equipment.ageRangeEnum)
     }
 
-    private var annualSavings: Double {
-        EfficiencyDatabase.estimateAnnualSavings(
-            type: equipment.typeEnum,
-            currentEfficiency: equipment.estimatedEfficiency,
-            targetEfficiency: spec.bestInClass,
-            homeSqFt: home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500,
-            climateZone: home.climateZoneEnum
+    private var upgrades: [UpgradeRecommendation] {
+        UpgradeEngine.generateUpgrades(
+            for: equipment,
+            climateZone: home.climateZoneEnum,
+            homeSqFt: home.computedTotalSqFt > 0 ? home.computedTotalSqFt : 1500
         )
-    }
-
-    private var payback: Double? {
-        EfficiencyDatabase.paybackYears(upgradeCost: spec.upgradeCost, annualSavings: annualSavings)
     }
 
     var body: some View {
@@ -27,8 +21,8 @@ struct EquipmentResultView: View {
             VStack(spacing: 20) {
                 heroCard
                 efficiencyComparisonCard
-                if annualSavings > 0 {
-                    upgradeCard
+                if !upgrades.isEmpty {
+                    upgradeOptionsSection
                 }
             }
             .padding()
@@ -126,65 +120,138 @@ struct EquipmentResultView: View {
         }
     }
 
-    // MARK: - Upgrade
+    // MARK: - Upgrade Options
 
-    private var upgradeCard: some View {
+    private var upgradeOptionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Upgrade Recommendation")
+            Text("Upgrade Options")
                 .font(.headline)
 
-            HStack {
-                Text("Estimated Annual Savings")
-                    .font(.subheadline)
-                Spacer()
-                Text("$\(Int(annualSavings))/yr")
-                    .font(.title3.bold())
-                    .foregroundStyle(.green)
-            }
+            Text("Good \u{2192} Better \u{2192} Best")
+                .font(.caption)
+                .foregroundStyle(.secondary)
 
-            HStack {
-                Text("Estimated Upgrade Cost")
-                    .font(.subheadline)
-                Spacer()
-                Text("$\(Int(spec.upgradeCost).formatted())")
-                    .font(.subheadline)
-            }
-
-            if let pb = payback {
-                HStack {
-                    Text("Simple Payback")
-                        .font(.subheadline)
-                    Spacer()
-                    Text(String(format: "%.1f years", pb))
-                        .font(.subheadline.bold())
-                        .foregroundStyle(pb < 3 ? .green : pb < 7 ? .orange : .secondary)
-                }
-
-                priorityBadge(payback: pb)
+            ForEach(upgrades) { rec in
+                upgradeRecommendationCard(rec)
             }
         }
-        .padding(16)
-        .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
     }
 
-    private func priorityBadge(payback: Double) -> some View {
+    private func upgradeRecommendationCard(_ rec: UpgradeRecommendation) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Tier badge + title
+            HStack(spacing: 8) {
+                tierBadge(rec.tier)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(rec.title)
+                        .font(.subheadline.bold())
+                    Text(rec.upgradeTarget)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+
+            if rec.alreadyMeetsThisTier {
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.caption)
+                    Text("Your current equipment meets this tier")
+                        .font(.caption)
+                }
+                .foregroundStyle(.green)
+            }
+
+            // Cost range
+            HStack {
+                Text("Estimated Cost")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text("$\(Int(rec.costLow).formatted()) – $\(Int(rec.costHigh).formatted())")
+                    .font(.subheadline.bold())
+            }
+
+            // Annual savings
+            if rec.annualSavings > 0 {
+                HStack {
+                    Text("Annual Savings")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text("$\(Int(rec.annualSavings))/yr")
+                        .font(.title3.bold())
+                        .foregroundStyle(.green)
+                }
+
+                // Payback
+                if let pb = rec.paybackYears {
+                    HStack {
+                        Text("Simple Payback")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text(String(format: "%.1f years", pb))
+                            .font(.caption.bold())
+                            .foregroundStyle(pb < 3 ? .green : pb < 7 ? .orange : .secondary)
+                    }
+                }
+            }
+
+            // Tax credit
+            if rec.taxCreditEligible && rec.taxCreditAmount > 0 {
+                HStack {
+                    Image(systemName: "dollarsign.circle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.blue)
+                    Text("Tax Credit: $\(Int(rec.taxCreditAmount))")
+                        .font(.caption.bold())
+                        .foregroundStyle(.blue)
+                    Spacer()
+                    if let epb = rec.effectivePaybackYears, let pb = rec.paybackYears, epb < pb {
+                        Text("Effective payback: \(String(format: "%.1f yr", epb))")
+                            .font(.caption)
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .padding(8)
+                .background(.blue.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+            }
+
+            // Technology note
+            if let note = rec.technologyNote {
+                DisclosureGroup {
+                    Text(note)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                } label: {
+                    Text("Technology Details")
+                        .font(.caption)
+                        .foregroundStyle(Constants.accentColor)
+                }
+            }
+        }
+        .padding(14)
+        .background(.background, in: RoundedRectangle(cornerRadius: 14))
+        .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+    }
+
+    private func tierBadge(_ tier: UpgradeTier) -> some View {
         let (label, color): (String, Color) = {
-            if payback < 3 { return ("Quick Win", .green) }
-            if payback < 7 { return ("Strong Investment", .orange) }
-            return ("Long Term", .secondary)
+            switch tier {
+            case .good: return ("Good", .blue)
+            case .better: return ("Better", .orange)
+            case .best: return ("Best", .green)
+            }
         }()
 
-        return HStack(spacing: 4) {
-            Image(systemName: "star.fill")
-                .font(.caption2)
-            Text(label)
-                .font(.caption.bold())
-        }
-        .foregroundStyle(color)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .background(color.opacity(0.12), in: Capsule())
+        return Text(label)
+            .font(.caption2.bold())
+            .foregroundStyle(.white)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(color, in: Capsule())
     }
 
     private func barColor(ratio: Double) -> Color {
