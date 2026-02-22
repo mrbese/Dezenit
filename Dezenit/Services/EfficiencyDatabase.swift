@@ -209,14 +209,19 @@ enum EfficiencyDatabase {
             return (homeSqFt * correctedFactor) / efficiency * electricityRate
 
         case .furnace:
-            let factor: Double
+            // correctedFactor = btuPerSqFt * fullLoadHours / 100000
+            // Hot:      10 BTU/sqft *  200 hrs / 100000 = 0.02
+            // Moderate: 25 BTU/sqft *  600 hrs / 100000 = 0.15
+            // Cold:     35 BTU/sqft * 1000 hrs / 100000 = 0.35
+            let correctedFactor: Double
             switch climateZone {
-            case .hot: factor = 200
-            case .moderate: factor = 600
-            case .cold: factor = 1000
+            case .hot:      correctedFactor = 0.02
+            case .moderate: correctedFactor = 0.15
+            case .cold:     correctedFactor = 0.35
             }
+            // efficiency is stored as a percentage (e.g. 65 for 65% AFUE)
             guard efficiency > 0 else { return 0 }
-            return (homeSqFt * factor * gasRate) / efficiency
+            return (homeSqFt * correctedFactor) / (efficiency / 100.0) * gasRate
 
         case .waterHeater, .waterHeaterTankless:
             // Approximate annual water heating cost
