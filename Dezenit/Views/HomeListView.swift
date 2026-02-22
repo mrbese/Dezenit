@@ -26,6 +26,7 @@ struct HomeListView: View {
                             Image(systemName: "plus")
                                 .fontWeight(.semibold)
                         }
+                        .accessibilityLabel("Add new home")
                     }
                 }
             }
@@ -128,7 +129,8 @@ private struct HomeRowView: View {
                     let grade = GradingEngine.grade(for: home.equipment)
                     Text(grade.rawValue)
                         .font(.headline.bold())
-                        .foregroundStyle(gradeColor(grade))
+                        .foregroundStyle(Constants.gradeColor(grade))
+                        .accessibilityLabel("Efficiency grade \(grade.rawValue)")
                 }
             }
             HStack(spacing: 12) {
@@ -144,15 +146,6 @@ private struct HomeRowView: View {
         .padding(.vertical, 2)
     }
 
-    private func gradeColor(_ grade: EfficiencyGrade) -> Color {
-        switch grade {
-        case .a: return .green
-        case .b: return .blue
-        case .c: return .yellow
-        case .d: return .orange
-        case .f: return .red
-        }
-    }
 }
 
 // MARK: - Add Home Sheet

@@ -51,6 +51,21 @@ enum Constants {
         static let incandescent: [Double] = [40, 60, 75, 100, 150]
     }
 
+    // MARK: - Semantic Colors
+
+    static func gradeColor(_ grade: EfficiencyGrade) -> Color {
+        switch grade {
+        case .a: return .green
+        case .b: return .blue
+        case .c: return .yellow
+        case .d: return .orange
+        case .f: return .red
+        }
+    }
+
+    static let statusSuccess = Color.green
+    static let statusWarning = Color.orange
+
     /// Phantom load (standby) values for common device categories
     enum PhantomLoads {
         static let entertainmentCenter: Double = 25 // TV + soundbar + streaming + game console

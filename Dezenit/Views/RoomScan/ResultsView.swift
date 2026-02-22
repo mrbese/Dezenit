@@ -181,7 +181,7 @@ struct ResultsView: View {
             Spacer()
             Text("\(sign)\(Int(abs(value)).formatted())")
                 .font(.subheadline.monospacedDigit())
-                .foregroundStyle(value < 0 ? .green : .primary)
+                .foregroundStyle(value < 0 ? Constants.statusSuccess : .primary)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -254,10 +254,10 @@ private struct RecommendationCard: View {
                     Text(savings)
                         .font(.caption)
                 }
-                .foregroundStyle(.green)
+                .foregroundStyle(Constants.statusSuccess)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(.green.opacity(0.1), in: Capsule())
+                .background(Constants.statusSuccess.opacity(0.1), in: Capsule())
             }
         }
         .padding(14)

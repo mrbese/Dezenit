@@ -11,6 +11,8 @@ struct LightingCloseupView: View {
     @State private var ocrResult: BulbOCRResult?
     @State private var isProcessing = false
     @State private var showQuickSelect = false
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     var body: some View {
         ZStack {
@@ -63,6 +65,7 @@ struct LightingCloseupView: View {
                                         .frame(width: 80, height: 80)
                                 )
                         }
+                        .accessibilityLabel("Capture photo")
 
                         Spacer()
 
@@ -79,6 +82,11 @@ struct LightingCloseupView: View {
         }
         .onAppear { camera.start() }
         .onDisappear { camera.stop() }
+        .alert("Capture Error", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            Text(errorMessage)
+        }
         .sheet(isPresented: $showQuickSelect) {
             QuickWattageSelectView { wattage, bulbType in
                 let result = BulbOCRResult(
@@ -169,7 +177,11 @@ struct LightingCloseupView: View {
 
     private func captureAndOCR() {
         camera.capturePhoto { image in
-            guard let image else { return }
+            guard let image else {
+                errorMessage = "Failed to capture photo. Please try again."
+                showError = true
+                return
+            }
             capturedImage = image
             isProcessing = true
             Task {

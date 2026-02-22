@@ -101,6 +101,7 @@ struct ScanView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(.black.opacity(0.5), in: Capsule())
+                .accessibilityLabel("Scanning in progress")
 
                 Button(action: { service.stopSession() }) {
                     Text("Finish Scan")

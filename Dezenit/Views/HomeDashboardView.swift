@@ -290,6 +290,7 @@ struct HomeDashboardView: View {
                     Image(systemName: "plus.circle.fill")
                         .foregroundStyle(Constants.accentColor)
                 }
+                .accessibilityLabel("Add room")
             }
 
             if home.rooms.isEmpty {
@@ -344,6 +345,7 @@ struct HomeDashboardView: View {
                     Image(systemName: "plus.circle.fill")
                         .foregroundStyle(Constants.accentColor)
                 }
+                .accessibilityLabel("Add equipment")
             }
 
             if home.equipment.isEmpty {
@@ -417,6 +419,7 @@ struct HomeDashboardView: View {
                     Image(systemName: "plus.circle.fill")
                         .foregroundStyle(Constants.accentColor)
                 }
+                .accessibilityLabel("Add appliance")
             }
 
             if home.appliances.isEmpty {
@@ -518,6 +521,7 @@ struct HomeDashboardView: View {
                     Image(systemName: "plus.circle.fill")
                         .foregroundStyle(Constants.accentColor)
                 }
+                .accessibilityLabel("Add energy bill")
             }
 
             if home.energyBills.isEmpty {

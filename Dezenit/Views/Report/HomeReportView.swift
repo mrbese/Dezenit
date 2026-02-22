@@ -127,6 +127,7 @@ struct HomeReportView: View {
                     Text(grade.rawValue)
                         .font(.system(size: 56, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
+                        .accessibilityLabel("Efficiency grade \(grade.rawValue)")
                     Text("Grade")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -234,12 +235,12 @@ struct HomeReportView: View {
 
             statRow("Total potential savings", "$\(Int(totalSav).formatted())/yr", color: .green)
             statRow("Total investment range", "$\(Int(totalCostLow).formatted()) – $\(Int(totalCostHigh).formatted())", color: .primary)
-            statRow("Average payback period", String(format: "%.1f years", avgPayback), color: avgPayback < 5 ? .green : .orange)
+            statRow("Average payback period", String(format: "%.1f years", avgPayback), color: avgPayback < 5 ? Constants.statusSuccess : Constants.statusWarning)
 
             if totalCredits > 0 {
                 Divider()
                 statRow("After tax credits", "$\(Int(afterCreditsLow).formatted()) – $\(Int(afterCreditsHigh).formatted())", color: .blue)
-                statRow("Effective payback", String(format: "%.1f years", afterCreditsPayback), color: afterCreditsPayback < 5 ? .green : .orange)
+                statRow("Effective payback", String(format: "%.1f years", afterCreditsPayback), color: afterCreditsPayback < 5 ? Constants.statusSuccess : Constants.statusWarning)
             }
         }
         .padding(16)

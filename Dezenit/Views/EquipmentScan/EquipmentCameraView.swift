@@ -8,6 +8,8 @@ struct EquipmentCameraView: View {
     @Environment(\.dismiss) private var dismiss
 
     @StateObject private var camera = CameraService()
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     var body: some View {
         ZStack {
@@ -54,6 +56,9 @@ struct EquipmentCameraView: View {
                         camera.capturePhoto { image in
                             if let image {
                                 onCapture(image)
+                            } else {
+                                errorMessage = "Failed to capture photo. Please try again."
+                                showError = true
                             }
                         }
                     }) {
@@ -66,6 +71,7 @@ struct EquipmentCameraView: View {
                                     .frame(width: 80, height: 80)
                             )
                     }
+                    .accessibilityLabel("Capture photo")
 
                     Spacer()
 
@@ -80,6 +86,17 @@ struct EquipmentCameraView: View {
         }
         .onAppear { camera.start() }
         .onDisappear { camera.stop() }
+        .onChange(of: camera.cameraUnavailable) { _, unavailable in
+            if unavailable {
+                errorMessage = "Camera is not available on this device."
+                showError = true
+            }
+        }
+        .alert("Camera Error", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            Text(errorMessage)
+        }
     }
 }
 
@@ -91,12 +108,17 @@ private class CameraService: NSObject, ObservableObject {
     private let output = AVCapturePhotoOutput()
     private var completion: ((UIImage?) -> Void)?
 
+    @Published var cameraUnavailable = false
+
     func start() {
         guard !session.isRunning else { return }
         session.sessionPreset = .photo
 
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
-              let input = try? AVCaptureDeviceInput(device: device) else { return }
+              let input = try? AVCaptureDeviceInput(device: device) else {
+            cameraUnavailable = true
+            return
+        }
 
         if session.canAddInput(input) { session.addInput(input) }
         if session.canAddOutput(output) { session.addOutput(output) }

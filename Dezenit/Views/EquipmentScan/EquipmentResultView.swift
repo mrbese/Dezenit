@@ -207,7 +207,7 @@ struct EquipmentResultView: View {
                         Spacer()
                         Text(String(format: "%.1f years", pb))
                             .font(.caption.bold())
-                            .foregroundStyle(pb < 3 ? .green : pb < 7 ? .orange : .secondary)
+                            .foregroundStyle(pb < 3 ? Constants.statusSuccess : pb < 7 ? Constants.statusWarning : .secondary)
                     }
                 }
             }
@@ -269,8 +269,8 @@ struct EquipmentResultView: View {
     }
 
     private func barColor(ratio: Double) -> Color {
-        if ratio >= 0.7 { return .green }
-        if ratio >= 0.4 { return .orange }
+        if ratio >= 0.7 { return Constants.statusSuccess }
+        if ratio >= 0.4 { return Constants.statusWarning }
         return .red
     }
 }

@@ -59,6 +59,7 @@
 		F1E0D9C8B7A6F5E4D3C2B1B0 /* AuditProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F2 /* AuditProgressBar.swift */; };
 		F1E0D9C8B7A6F5E4D3C2B1B1 /* EnvelopeAssessmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F3 /* EnvelopeAssessmentView.swift */; };
 		F1E0D9C8B7A6F5E4D3C2B1B2 /* EnergyProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F4 /* EnergyProfileService.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1B3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F5 /* OnboardingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +116,7 @@
 		A1B2C3D4E5F6A7B8C9D0E2F2 /* AuditProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditProgressBar.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E2F3 /* EnvelopeAssessmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeAssessmentView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E2F4 /* EnergyProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyProfileService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E2F5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		G1A2B3C4D5E6F7A8B9C0D1E5 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E2F5 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		G1A2B3C4D5E6F7A8B9C0D1E4 /* AuditFlow */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +268,7 @@
 				G1A2B3C4D5E6F7A8B9C0D1E4 /* AuditFlow */,
 				G1A2B3C4D5E6F7A8B9C0D1E3 /* BillScan */,
 				18E50222503637B73118C92E /* EquipmentScan */,
+				G1A2B3C4D5E6F7A8B9C0D1E5 /* Onboarding */,
 				5ABA4F45E97506E0875A62BD /* Report */,
 				15722AA64BF327D34459BE72 /* RoomScan */,
 				G1A2B3C4D5E6F7A8B9C0D1E1 /* WindowAssessment */,
@@ -411,6 +422,7 @@
 				F1E0D9C8B7A6F5E4D3C2B1A8 /* LightingCloseupView.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1A5 /* LightingOCRService.swift in Sources */,
 				4DB3AB8042C542DD4A7EAC28 /* OCRService.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1B3 /* OnboardingView.swift in Sources */,
 				BB5FCD64E44E997499226530 /* RecommendationEngine.swift in Sources */,
 				027707383DF1564F1E5D0E2D /* ReportPDFGenerator.swift in Sources */,
 				4FCF91EACA591894E8C36675 /* ResultsView.swift in Sources */,
@@ -435,6 +447,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Dezenit uses your camera to scan rooms with LiDAR and photograph equipment labels for OCR.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your approximate location is used to suggest a climate zone for energy calculations.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Dezenit accesses your photo library so you can import utility bill images for parsing.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -460,6 +473,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Dezenit uses your camera to scan rooms with LiDAR and photograph equipment labels for OCR.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your approximate location is used to suggest a climate zone for energy calculations.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Dezenit accesses your photo library so you can import utility bill images for parsing.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

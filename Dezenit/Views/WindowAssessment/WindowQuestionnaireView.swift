@@ -267,8 +267,8 @@ struct WindowQuestionnaireView: View {
 
     private var uFactorColor: Color {
         let u = window.effectiveUFactor
-        if u < 0.35 { return .green }
-        if u < 0.60 { return .orange }
+        if u < 0.35 { return Constants.statusSuccess }
+        if u < 0.60 { return Constants.statusWarning }
         return .red
     }
 

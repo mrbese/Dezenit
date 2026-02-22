@@ -10,6 +10,8 @@ struct ApplianceScanView: View {
     @State private var capturedImage: UIImage?
     @State private var classificationResults: [ClassificationResult] = []
     @State private var isClassifying = false
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     var body: some View {
         ZStack {
@@ -106,6 +108,7 @@ struct ApplianceScanView: View {
                                         .frame(width: 80, height: 80)
                                 )
                         }
+                        .accessibilityLabel("Capture photo")
 
                         Spacer()
 
@@ -121,18 +124,33 @@ struct ApplianceScanView: View {
         }
         .onAppear { camera.start() }
         .onDisappear { camera.stop() }
+        .alert("Error", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            Text(errorMessage)
+        }
     }
 
     private func captureAndClassify() {
         camera.capturePhoto { image in
-            guard let image else { return }
+            guard let image else {
+                errorMessage = "Failed to capture photo. Please try again."
+                showError = true
+                return
+            }
             capturedImage = image
             isClassifying = true
 
             Task {
                 let results = await ApplianceClassificationService.classify(image: image, topK: 3)
-                classificationResults = results
-                isClassifying = false
+                if results.isEmpty {
+                    errorMessage = "Could not identify this appliance. Try a different angle or add it manually."
+                    showError = true
+                    isClassifying = false
+                } else {
+                    classificationResults = results
+                    isClassifying = false
+                }
             }
         }
     }

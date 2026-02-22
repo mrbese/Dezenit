@@ -702,14 +702,14 @@ struct AuditFlowView: View {
     private func completedBadge(_ text: String) -> some View {
         HStack(spacing: 6) {
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(.green)
+                .foregroundStyle(Constants.statusSuccess)
             Text(text)
                 .font(.subheadline.bold())
-                .foregroundStyle(.green)
+                .foregroundStyle(Constants.statusSuccess)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .background(Color.green.opacity(0.1), in: Capsule())
+        .background(Constants.statusSuccess.opacity(0.1), in: Capsule())
     }
 
     private func actionButton(icon: String, label: String, action: @escaping () -> Void) -> some View {

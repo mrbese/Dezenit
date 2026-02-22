@@ -13,6 +13,8 @@ struct BillUploadView: View {
     @State private var parsedResult: ParsedBillResult?
     @State private var isProcessing = false
     @State private var selectedPhoto: PhotosPickerItem?
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     var body: some View {
         ZStack {
@@ -65,6 +67,7 @@ struct BillUploadView: View {
                                         .frame(width: 80, height: 80)
                                 )
                         }
+                        .accessibilityLabel("Capture photo")
 
                         Spacer()
 
@@ -103,8 +106,16 @@ struct BillUploadView: View {
                     let result = await BillParsingService.parseBill(from: image)
                     parsedResult = result
                     isProcessing = false
+                } else {
+                    errorMessage = "Could not load the selected photo. Please try another image."
+                    showError = true
                 }
             }
+        }
+        .alert("Error", isPresented: $showError) {
+            Button("OK") {}
+        } message: {
+            Text(errorMessage)
         }
     }
 
@@ -183,7 +194,11 @@ struct BillUploadView: View {
 
     private func captureAndParse() {
         camera.capturePhoto { image in
-            guard let image else { return }
+            guard let image else {
+                errorMessage = "Failed to capture photo. Please try again."
+                showError = true
+                return
+            }
             capturedImage = image
             isProcessing = true
             Task {
