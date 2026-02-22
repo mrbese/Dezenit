@@ -129,6 +129,13 @@ struct HomeDashboardView: View {
                         .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
                     }
                     .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            modelContext.delete(room)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
             }
         }
@@ -185,6 +192,13 @@ struct HomeDashboardView: View {
                         .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
                     }
                     .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            modelContext.delete(item)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
             }
         }
