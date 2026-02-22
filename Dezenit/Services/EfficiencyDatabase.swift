@@ -233,6 +233,27 @@ enum EfficiencyDatabase {
         }
     }
 
+    // Heat pump heating cost uses HSPF (not SEER)
+    // heatingFactor = btuPerSqFt * fullLoadHours / 1000
+    // Hot:      10 BTU/sqft *  200 hrs / 1000 = 2.0
+    // Moderate: 25 BTU/sqft *  600 hrs / 1000 = 15.0
+    // Cold:     35 BTU/sqft * 1000 hrs / 1000 = 35.0
+    static func estimateHeatPumpHeatingCost(
+        hspf: Double,
+        homeSqFt: Double,
+        climateZone: ClimateZone,
+        electricityRate: Double = Constants.defaultElectricityRate
+    ) -> Double {
+        let heatingFactor: Double
+        switch climateZone {
+        case .hot:      heatingFactor = 2.0
+        case .moderate: heatingFactor = 15.0
+        case .cold:     heatingFactor = 35.0
+        }
+        guard hspf > 0 else { return 0 }
+        return (homeSqFt * heatingFactor) / hspf * electricityRate
+    }
+
     static func estimateAnnualSavings(
         type: EquipmentType,
         currentEfficiency: Double,

@@ -193,10 +193,10 @@ enum UpgradeEngine {
 
         // Best tier: heat pump replaces AC + furnace → combined cooling + heating savings
         let coolingSavings = savings(type: .centralAC, current: current, target: bestTarget, sqFt: sqFt, climateZone: climateZone)
-        // Estimate furnace savings from switching to heat pump (HSPF ~13 → effective gas elimination)
+        // Heating savings: old furnace cost minus new HP heating cost (uses HSPF 13, not SEER)
         let furnaceCost = EfficiencyDatabase.estimateAnnualCost(type: .furnace, efficiency: 80, homeSqFt: sqFt, climateZone: climateZone, gasRate: gasRate)
-        let heatPumpHeatingCost = EfficiencyDatabase.estimateAnnualCost(type: .heatPump, efficiency: bestTarget, homeSqFt: sqFt, climateZone: climateZone, electricityRate: electricityRate)
-        let heatingSavings = max(furnaceCost - heatPumpHeatingCost * 0.4, 0) // HP heating uses ~40% of cooling energy path
+        let heatPumpHeatingCost = EfficiencyDatabase.estimateHeatPumpHeatingCost(hspf: 13.0, homeSqFt: sqFt, climateZone: climateZone, electricityRate: electricityRate)
+        let heatingSavings = max(furnaceCost - heatPumpHeatingCost, 0)
         let bestSavings = coolingSavings + heatingSavings
 
         return [
@@ -289,9 +289,9 @@ enum UpgradeEngine {
         let goodSavings = savings(type: .furnace, current: current, target: goodTarget, sqFt: sqFt, climateZone: climateZone)
         let betterSavings = savings(type: .furnace, current: current, target: betterTarget, sqFt: sqFt, climateZone: climateZone)
 
-        // Best: replace furnace with heat pump
+        // Best: replace furnace with heat pump, using HSPF 13 for heating cost
         let currentFurnaceCost = EfficiencyDatabase.estimateAnnualCost(type: .furnace, efficiency: current, homeSqFt: sqFt, climateZone: climateZone, gasRate: gasRate)
-        let hpHeatingCost = EfficiencyDatabase.estimateAnnualCost(type: .heatPump, efficiency: bestHPSEER, homeSqFt: sqFt, climateZone: climateZone, electricityRate: electricityRate) * 0.5
+        let hpHeatingCost = EfficiencyDatabase.estimateHeatPumpHeatingCost(hspf: 13.0, homeSqFt: sqFt, climateZone: climateZone, electricityRate: electricityRate)
         let bestSavings = max(currentFurnaceCost - hpHeatingCost, 0)
 
         return [
