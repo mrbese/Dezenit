@@ -43,6 +43,7 @@ struct DetailsView: View {
                 windowsSection
                 environmentSection
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Room Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -66,6 +67,14 @@ struct DetailsView: View {
             .sheet(item: $windowQuestionnaireIndex) { editID in
                 if editID.index >= 0 && editID.index < windows.count {
                     WindowQuestionnaireView(window: $windows[editID.index])
+                }
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
                 }
             }
             .onAppear {
@@ -273,8 +282,10 @@ private struct WindowRowView: View {
                 // Info/assess button
                 Button(action: onAssess) {
                     Image(systemName: "info.circle")
-                        .font(.caption)
+                        .font(.body)
                         .foregroundStyle(Constants.accentColor)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct ApplianceDetailsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -31,6 +32,7 @@ struct ApplianceDetailsView: View {
                 roomSection
                 previewSection
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Add Appliance")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -41,6 +43,14 @@ struct ApplianceDetailsView: View {
                     Button("Save") { saveAppliance() }
                         .fontWeight(.semibold)
                         .foregroundStyle(Constants.accentColor)
+                }
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
                 }
             }
             .onAppear { applyPrefills() }
@@ -216,7 +226,7 @@ struct ApplianceDetailsView: View {
         }
 
         let w = Double(wattage) ?? category.defaultWattage
-        let h = Double(hoursPerDay) ?? category.defaultHoursPerDay
+        let h = min(Double(hoursPerDay) ?? category.defaultHoursPerDay, 24.0)
 
         let appliance = Appliance(
             category: category,
@@ -233,6 +243,7 @@ struct ApplianceDetailsView: View {
         modelContext.insert(appliance)
         home.updatedAt = Date()
 
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         savedAppliance = appliance
         showingResult = true
     }

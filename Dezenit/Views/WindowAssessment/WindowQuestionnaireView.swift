@@ -5,6 +5,7 @@ struct WindowQuestionnaireView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var step = 0
+    @State private var snapshot: WindowInfo?
     private let totalSteps = 4
 
     var body: some View {
@@ -27,9 +28,15 @@ struct WindowQuestionnaireView: View {
             }
             .navigationTitle("Window Assessment")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                if snapshot == nil { snapshot = window }
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") {
+                        if let snapshot { window = snapshot }
+                        dismiss()
+                    }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if step == totalSteps - 1 {

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct EquipmentDetailsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -31,6 +32,7 @@ struct EquipmentDetailsView: View {
                 ageSection
                 notesSection
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Add Equipment")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -41,6 +43,14 @@ struct EquipmentDetailsView: View {
                     Button("Save") { saveEquipment() }
                         .fontWeight(.semibold)
                         .foregroundStyle(Constants.accentColor)
+                }
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
                 }
             }
             .sheet(isPresented: $showingCamera) {
@@ -205,6 +215,7 @@ struct EquipmentDetailsView: View {
         eq.home = home
         modelContext.insert(eq)
         home.updatedAt = Date()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         savedEquipment = eq
         showingResult = true
     }

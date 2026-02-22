@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct AuditFlowView: View {
     @Environment(\.modelContext) private var modelContext
@@ -36,6 +37,7 @@ struct AuditFlowView: View {
                 // Step content
                 stepContent
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .animation(.easeInOut(duration: 0.25), value: currentStep)
 
                 // Bottom buttons
                 bottomBar
@@ -82,11 +84,12 @@ struct AuditFlowView: View {
                 }
             }
             .sheet(isPresented: $showingLightingDetails) {
-                if let (result, _) = lightingPrefill {
+                if let (result, image) = lightingPrefill {
                     ApplianceDetailsView(
                         home: home,
                         prefilledCategory: result.bulbType ?? .ledBulb,
                         prefilledWattage: result.wattage,
+                        prefilledImage: image,
                         detectionMethod: "ocr",
                         onComplete: { showingLightingDetails = false }
                     )
@@ -233,19 +236,11 @@ struct AuditFlowView: View {
                         }
                     }
                     actionButton(icon: "pencil", label: "Enter Manually") {
-                        // Present DetailsView as a sheet — uses existing flow
-                        showingScan = false
-                        // We'll reuse the scan sheet toggle for manual entry
-                        // Actually need a separate state for manual room
+                        showingManualRoom = true
                     }
                 }
             }
             .padding(20)
-        }
-        .sheet(isPresented: Binding(
-            get: { false }, set: { _ in }
-        )) {
-            // Placeholder — manual room entry handled by showingScan already
         }
     }
 
@@ -310,6 +305,7 @@ struct AuditFlowView: View {
     @State private var showingEquipmentSheet = false
     @State private var pendingEquipmentTypes: [EquipmentType] = []
     @State private var showingManualRoom = false
+    @State private var windowEditRoom: Room?
 
     // Equipment sheet modifier — added to body via separate ViewModifier
     var equipmentSheet: some View {
@@ -418,23 +414,31 @@ struct AuditFlowView: View {
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 8)
                 } else {
-                    Text("Tap a room to edit its window assessment via the room details view.")
+                    Text("Tap a room to edit its windows.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
                     ForEach(home.rooms) { room in
-                        HStack {
-                            Image(systemName: room.windows.isEmpty ? "circle" : "checkmark.circle.fill")
-                                .foregroundStyle(room.windows.isEmpty ? Color.secondary : Color.green)
-                            Text(room.name.isEmpty ? "Unnamed Room" : room.name)
-                                .font(.subheadline)
-                            Spacer()
-                            Text("\(room.windows.count) window\(room.windows.count == 1 ? "" : "s")")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                        Button {
+                            windowEditRoom = room
+                        } label: {
+                            HStack {
+                                Image(systemName: room.windows.isEmpty ? "circle" : "checkmark.circle.fill")
+                                    .foregroundStyle(room.windows.isEmpty ? Color.secondary : Color.green)
+                                Text(room.name.isEmpty ? "Unnamed Room" : room.name)
+                                    .font(.subheadline)
+                                Spacer()
+                                Text("\(room.windows.count) window\(room.windows.count == 1 ? "" : "s")")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(12)
+                            .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 10))
                         }
-                        .padding(12)
-                        .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 10))
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -569,6 +573,7 @@ struct AuditFlowView: View {
 
             if currentStep == .review {
                 Button {
+                    audit?.markComplete(.review)
                     dismiss()
                 } label: {
                     Text("Finish")
@@ -633,6 +638,11 @@ struct AuditFlowView: View {
                         onComplete: { showingLightingManual = false }
                     )
                 }
+                .sheet(item: $windowEditRoom) { room in
+                    DetailsView(squareFootage: room.squareFootage, scannedWindows: room.windows, home: home, onComplete: {
+                        windowEditRoom = nil
+                    })
+                }
         }
     }
 
@@ -661,6 +671,7 @@ struct AuditFlowView: View {
     }
 
     private func completeCurrentStep() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         audit?.markComplete(currentStep)
         moveToNextStep()
     }
