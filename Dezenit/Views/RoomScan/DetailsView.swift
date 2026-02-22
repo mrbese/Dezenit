@@ -10,6 +10,7 @@ struct DetailsView: View {
     let scannedSqFt: Double?
     let windowsFromScan: Bool   // true when windows were auto-populated
     var home: Home? = nil
+    var onComplete: (() -> Void)? = nil
 
     // Form state
     @State private var roomName: String = ""
@@ -23,10 +24,11 @@ struct DetailsView: View {
 
     @StateObject private var locationDetector = ClimateZoneDetector()
 
-    init(squareFootage: Double?, scannedWindows: [WindowInfo] = [], home: Home? = nil) {
+    init(squareFootage: Double?, scannedWindows: [WindowInfo] = [], home: Home? = nil, onComplete: (() -> Void)? = nil) {
         self.scannedSqFt = squareFootage
         self.windowsFromScan = !scannedWindows.isEmpty
         self.home = home
+        self.onComplete = onComplete
         if let sqFt = squareFootage {
             _squareFootage = State(initialValue: "\(Int(sqFt))")
         }
@@ -57,7 +59,7 @@ struct DetailsView: View {
             }
             .navigationDestination(isPresented: $showingResults) {
                 if let room = savedRoom {
-                    ResultsView(room: room)
+                    ResultsView(room: room, onComplete: onComplete)
                 }
             }
             .onAppear {

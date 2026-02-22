@@ -24,10 +24,14 @@ struct HomeDashboardView: View {
             ScanView(home: home)
         }
         .sheet(isPresented: $showingManualRoom) {
-            DetailsView(squareFootage: nil, home: home)
+            DetailsView(squareFootage: nil, home: home, onComplete: {
+                showingManualRoom = false
+            })
         }
         .sheet(isPresented: $showingEquipmentScan) {
-            EquipmentDetailsView(home: home)
+            EquipmentDetailsView(home: home, onComplete: {
+                showingEquipmentScan = false
+            })
         }
     }
 

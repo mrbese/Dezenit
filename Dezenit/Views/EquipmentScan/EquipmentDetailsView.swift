@@ -6,6 +6,7 @@ struct EquipmentDetailsView: View {
     @Environment(\.dismiss) private var dismiss
 
     let home: Home
+    var onComplete: (() -> Void)? = nil
 
     @State private var equipmentType: EquipmentType = .centralAC
     @State private var manufacturer: String = ""
@@ -50,7 +51,7 @@ struct EquipmentDetailsView: View {
             }
             .navigationDestination(isPresented: $showingResult) {
                 if let eq = savedEquipment {
-                    EquipmentResultView(equipment: eq, home: home)
+                    EquipmentResultView(equipment: eq, home: home, onComplete: onComplete ?? { dismiss() })
                 }
             }
         }

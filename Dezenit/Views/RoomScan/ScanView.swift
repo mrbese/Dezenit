@@ -43,9 +43,10 @@ struct ScanView: View {
                 }
             }
             .sheet(item: $scanResult) { result in
-                NavigationStack {
-                    DetailsView(squareFootage: result.sqFt, scannedWindows: result.windows, home: home)
-                }
+                DetailsView(squareFootage: result.sqFt, scannedWindows: result.windows, home: home, onComplete: {
+                    scanResult = nil
+                    dismiss()
+                })
             }
         }
     }

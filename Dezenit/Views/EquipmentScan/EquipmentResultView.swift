@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct EquipmentResultView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let equipment: Equipment
     let home: Home
+    var onComplete: (() -> Void)? = nil
 
     private var spec: EfficiencySpec {
         EfficiencyDatabase.lookup(type: equipment.typeEnum, age: equipment.ageRangeEnum)
@@ -29,6 +32,17 @@ struct EquipmentResultView: View {
         }
         .navigationTitle(equipment.typeEnum.rawValue)
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") {
+                    if let onComplete {
+                        onComplete()
+                    } else {
+                        dismiss()
+                    }
+                }
+            }
+        }
     }
 
     // MARK: - Hero

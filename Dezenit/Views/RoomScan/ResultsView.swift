@@ -6,6 +6,7 @@ struct ResultsView: View {
     @Environment(\.dismiss) private var dismiss
 
     let room: Room
+    var onComplete: (() -> Void)? = nil
 
     private var breakdown: BTUBreakdown {
         EnergyCalculator.calculate(
@@ -39,6 +40,15 @@ struct ResultsView: View {
         .navigationTitle(room.name.isEmpty ? "Results" : room.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") {
+                    if let onComplete {
+                        onComplete()
+                    } else {
+                        dismiss()
+                    }
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 ShareLink(item: shareText) {
                     Image(systemName: "square.and.arrow.up")
