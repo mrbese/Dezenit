@@ -175,7 +175,7 @@ struct HomeDashboardView: View {
                                     .frame(width: 36, height: 36)
                                     .rotationEffect(.degrees(-90))
                                 Text("\(Int(audit.progressPercentage))%")
-                                    .font(.system(size: 9, weight: .bold).monospacedDigit())
+                                    .font(.caption2.bold().monospacedDigit())
                             }
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Continue Audit")

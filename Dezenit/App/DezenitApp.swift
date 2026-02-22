@@ -5,6 +5,18 @@ import SwiftData
 struct DezenitApp: App {
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
+    let modelContainer: ModelContainer = {
+        let schema = Schema(versionedSchema: SchemaV1.self)
+        do {
+            return try ModelContainer(
+                for: schema,
+                migrationPlan: DezenitMigrationPlan.self
+            )
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }()
+
     var body: some Scene {
         WindowGroup {
             if hasSeenOnboarding {
@@ -13,13 +25,6 @@ struct DezenitApp: App {
                 OnboardingView()
             }
         }
-        .modelContainer(for: [
-            Home.self,
-            Room.self,
-            Equipment.self,
-            Appliance.self,
-            EnergyBill.self,
-            AuditProgress.self
-        ])
+        .modelContainer(modelContainer)
     }
 }

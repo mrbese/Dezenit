@@ -314,9 +314,12 @@ private struct BulbCameraPreview: UIViewRepresentable {
         let view = UIView()
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
-        layer.frame = UIScreen.main.bounds
         view.layer.addSublayer(layer)
         return view
     }
-    func updateUIView(_ uiView: UIView, context: Context) {}
+    func updateUIView(_ uiView: UIView, context: Context) {
+        if let layer = uiView.layer.sublayers?.first as? AVCaptureVideoPreviewLayer {
+            layer.frame = uiView.bounds
+        }
+    }
 }

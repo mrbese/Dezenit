@@ -63,6 +63,7 @@
 		F1E0D9C8B7A6F5E4D3C2B1B4 /* RebateDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F6 /* RebateDatabase.swift */; };
 		F1E0D9C8B7A6F5E4D3C2B1B5 /* StateDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F7 /* StateDetectionService.swift */; };
 		F1E0D9C8B7A6F5E4D3C2B1B6 /* RebateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F8 /* RebateService.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1B7 /* SchemaVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E3F1 /* SchemaVersioning.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +125,7 @@
 		A1B2C3D4E5F6A7B8C9D0E2F7 /* StateDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateDetectionService.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E2F8 /* RebateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebateService.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E2F9 /* Dezenit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dezenit.entitlements; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E3F1 /* SchemaVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaVersioning.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -293,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				20D74D185C82E3261299F39B /* DezenitApp.swift */,
+				A1B2C3D4E5F6A7B8C9D0E3F1 /* SchemaVersioning.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 				904FD64E559C097CAB49D67F /* Room.swift in Sources */,
 				7718D4B8B6303B27BDF9E79E /* RoomCaptureService.swift in Sources */,
 				A67A5054EB4F62DF376ADB7E /* ScanView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1B7 /* SchemaVersioning.swift in Sources */,
 				D10C78969BAD8C84AB9BA727 /* WindowInfo.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1A6 /* WindowQuestionnaireView.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1B4 /* RebateDatabase.swift in Sources */,

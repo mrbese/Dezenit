@@ -29,15 +29,18 @@ struct EquipmentCameraView: View {
                 Spacer()
 
                 // Guide box overlay
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(.white.opacity(0.6), lineWidth: 2)
-                    .frame(width: UIScreen.main.bounds.width * 0.75,
-                           height: UIScreen.main.bounds.height * 0.35)
-                    .overlay(
-                        Text("Align label here")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.5))
-                    )
+                GeometryReader { geo in
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.white.opacity(0.6), lineWidth: 2)
+                        .frame(width: geo.size.width * 0.75,
+                               height: geo.size.height * 0.35)
+                        .overlay(
+                            Text("Align label here")
+                                .font(.caption)
+                                .foregroundStyle(.white.opacity(0.5))
+                        )
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
 
                 Spacer()
 
@@ -163,10 +166,13 @@ private struct CameraPreviewView: UIViewRepresentable {
         let view = UIView()
         let previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.frame = UIScreen.main.bounds
         view.layer.addSublayer(previewLayer)
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) {}
+    func updateUIView(_ uiView: UIView, context: Context) {
+        if let previewLayer = uiView.layer.sublayers?.first as? AVCaptureVideoPreviewLayer {
+            previewLayer.frame = uiView.bounds
+        }
+    }
 }
