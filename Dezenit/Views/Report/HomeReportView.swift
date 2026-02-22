@@ -4,7 +4,15 @@ struct HomeReportView: View {
     let home: Home
 
     private var grade: EfficiencyGrade {
-        GradingEngine.grade(for: home.equipment)
+        GradingEngine.grade(for: home)
+    }
+
+    private var profile: EnergyProfile {
+        EnergyProfileService.generateProfile(for: home)
+    }
+
+    private var homeRecommendations: [Recommendation] {
+        RecommendationEngine.generateHomeRecommendations(for: home)
     }
 
     private var sqFt: Double {
@@ -68,9 +76,24 @@ struct HomeReportView: View {
                 if !home.equipment.isEmpty {
                     costSection
                 }
+                if profile.breakdown.count > 1 {
+                    energyProfileSection
+                }
+                if profile.billComparison != nil {
+                    billReconciliationSection
+                }
+                if !profile.topConsumers.isEmpty {
+                    applianceHighlightsSection
+                }
+                if profile.envelopeScore != nil {
+                    envelopeSummarySection
+                }
                 if !allUpgradesByEquipment.isEmpty {
                     upgradeSummaryStats
                     upgradesSection
+                }
+                if !homeRecommendations.isEmpty {
+                    quickWinsSection
                 }
                 if taxCredits.grandTotal > 0 {
                     taxCreditSection
@@ -415,6 +438,305 @@ struct HomeReportView: View {
             .background(color.opacity(0.12), in: Capsule())
     }
 
+    // MARK: - Energy Profile Breakdown
+
+    @ViewBuilder
+    private var energyProfileSection: some View {
+        let bp = profile.breakdown
+        let total = profile.totalEstimatedAnnualCost
+
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "chart.bar.fill")
+                    .foregroundStyle(Constants.accentColor)
+                Text("Energy Breakdown")
+                    .font(.headline)
+            }
+
+            // Stacked bar
+            if total > 0 {
+                GeometryReader { geo in
+                    HStack(spacing: 1) {
+                        ForEach(bp) { cat in
+                            let width = max(geo.size.width * cat.percentage / 100, 4)
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(categoryColor(cat.name))
+                                .frame(width: width, height: 20)
+                        }
+                    }
+                }
+                .frame(height: 20)
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+            }
+
+            // Legend
+            ForEach(bp) { cat in
+                HStack(spacing: 8) {
+                    Circle()
+                        .fill(categoryColor(cat.name))
+                        .frame(width: 10, height: 10)
+                    Image(systemName: cat.icon)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 16)
+                    Text(cat.name)
+                        .font(.subheadline)
+                    Spacer()
+                    Text("$\(Int(cat.annualCost))/yr")
+                        .font(.subheadline.bold())
+                    Text("(\(Int(cat.percentage))%)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(16)
+        .background(.background, in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+    }
+
+    private func categoryColor(_ name: String) -> Color {
+        switch name {
+        case "HVAC": return .blue
+        case "Water Heating": return .cyan
+        case "Appliances": return .orange
+        case "Lighting": return .yellow
+        case "Standby": return .gray
+        default: return .secondary
+        }
+    }
+
+    // MARK: - Bill Reconciliation
+
+    @ViewBuilder
+    private var billReconciliationSection: some View {
+        if let comparison = profile.billComparison {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .foregroundStyle(Constants.accentColor)
+                    Text("Bill vs. Estimate")
+                        .font(.headline)
+                }
+
+                HStack {
+                    Text("Actual (from bills)")
+                        .font(.subheadline)
+                    Spacer()
+                    Text("\(Int(comparison.billBasedAnnualKWh).formatted()) kWh/yr")
+                        .font(.subheadline.bold())
+                }
+                HStack {
+                    Text("Estimated (from audit)")
+                        .font(.subheadline)
+                    Spacer()
+                    Text("\(Int(comparison.estimatedAnnualKWh).formatted()) kWh/yr")
+                        .font(.subheadline.bold())
+                }
+
+                Divider()
+
+                HStack {
+                    Text("Accuracy")
+                        .font(.subheadline)
+                    Spacer()
+                    Text(comparison.accuracyLabel)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(accuracyColor(comparison.accuracyLabel))
+                    Text("(\(Int(comparison.gapPercentage))% gap)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if comparison.gapPercentage >= 25 {
+                    Text("A large gap may indicate untracked loads (pool pump, workshop, etc.) or seasonal variation. Adding more bills improves accuracy.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(16)
+            .background(.background, in: RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        }
+    }
+
+    private func accuracyColor(_ label: String) -> Color {
+        switch label {
+        case "Excellent": return .green
+        case "Good": return .blue
+        case "Fair": return .orange
+        default: return .red
+        }
+    }
+
+    // MARK: - Appliance Highlights
+
+    @ViewBuilder
+    private var applianceHighlightsSection: some View {
+        let consumers = profile.topConsumers
+        let phantomKWh = home.totalPhantomAnnualKWh
+        let phantomCost = phantomKWh * profile.electricityRate
+
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "bolt.fill")
+                    .foregroundStyle(Constants.accentColor)
+                Text("Top Energy Consumers")
+                    .font(.headline)
+            }
+
+            ForEach(Array(consumers.enumerated()), id: \.element.id) { index, consumer in
+                HStack(spacing: 10) {
+                    Text("#\(index + 1)")
+                        .font(.caption2.bold())
+                        .foregroundStyle(.white)
+                        .frame(width: 22, height: 22)
+                        .background(Constants.accentColor.opacity(0.8), in: Circle())
+                    Image(systemName: consumer.icon)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(width: 16)
+                    Text(consumer.name)
+                        .font(.subheadline)
+                    Spacer()
+                    Text("$\(Int(consumer.annualCost))/yr")
+                        .font(.subheadline.bold())
+                }
+            }
+
+            if phantomKWh > 50 {
+                Divider()
+                HStack(spacing: 8) {
+                    Image(systemName: "moon.zzz")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text("Phantom/Standby Waste")
+                        .font(.subheadline)
+                    Spacer()
+                    Text("\(Int(phantomKWh)) kWh · $\(Int(phantomCost))/yr")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.orange)
+                }
+            }
+        }
+        .padding(16)
+        .background(.background, in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+    }
+
+    // MARK: - Envelope Summary
+
+    @ViewBuilder
+    private var envelopeSummarySection: some View {
+        if let envScore = profile.envelopeScore {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: "shield.lefthalf.filled")
+                        .foregroundStyle(Constants.accentColor)
+                    Text("Building Envelope")
+                        .font(.headline)
+                    Spacer()
+                    Text(envScore.grade)
+                        .font(.title2.bold())
+                        .foregroundStyle(envelopeGradeColor(envScore.grade))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(envelopeGradeColor(envScore.grade).opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+                }
+
+                ForEach(envScore.details, id: \.self) { detail in
+                    let parts = detail.split(separator: ":", maxSplits: 1)
+                    HStack {
+                        Text(String(parts.first ?? ""))
+                            .font(.subheadline)
+                        Spacer()
+                        Text(String(parts.last ?? "").trimmingCharacters(in: .whitespaces))
+                            .font(.subheadline.bold())
+                            .foregroundStyle(envelopeDetailColor(String(parts.last ?? "")))
+                    }
+                }
+
+                if let weakest = envScore.weakestArea {
+                    Divider()
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                        Text("Priority: \(weakest)")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
+                }
+            }
+            .padding(16)
+            .background(.background, in: RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        }
+    }
+
+    private func envelopeGradeColor(_ grade: String) -> Color {
+        switch grade {
+        case "A": return .green
+        case "B": return .blue
+        case "C": return .yellow
+        case "D": return .orange
+        default: return .red
+        }
+    }
+
+    private func envelopeDetailColor(_ value: String) -> Color {
+        let trimmed = value.trimmingCharacters(in: .whitespaces)
+        switch trimmed {
+        case "Good", "Full": return .green
+        case "Average", "Fair", "Partial": return .orange
+        default: return .red
+        }
+    }
+
+    // MARK: - Quick Wins
+
+    @ViewBuilder
+    private var quickWinsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles")
+                    .foregroundStyle(Constants.accentColor)
+                Text("Quick Wins & Tips")
+                    .font(.headline)
+            }
+
+            ForEach(homeRecommendations) { rec in
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: rec.icon)
+                        .font(.subheadline)
+                        .foregroundStyle(Constants.accentColor)
+                        .frame(width: 24, alignment: .center)
+                        .padding(.top, 2)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(rec.title)
+                            .font(.subheadline.bold())
+                        Text(rec.detail)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        if let savings = rec.estimatedSavings {
+                            Text(savings)
+                                .font(.caption.bold())
+                                .foregroundStyle(.green)
+                        }
+                    }
+                }
+                if rec.id != homeRecommendations.last?.id {
+                    Divider()
+                }
+            }
+        }
+        .padding(16)
+        .background(.background, in: RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+    }
+
     // MARK: - Tax Credit Summary
 
     private var taxCreditSection: some View {
@@ -568,6 +890,37 @@ struct HomeReportView: View {
             parts.append("")
         }
 
+        // Energy breakdown
+        let bp = profile.breakdown
+        if bp.count > 1 {
+            parts.append("ENERGY BREAKDOWN")
+            parts.append("-".repeated(30))
+            for cat in bp {
+                parts.append("- \(cat.name): $\(Int(cat.annualCost))/yr (\(Int(cat.percentage))%)")
+            }
+            parts.append("")
+        }
+
+        // Bill comparison
+        if let comparison = profile.billComparison {
+            parts.append("BILL VS. ESTIMATE")
+            parts.append("-".repeated(30))
+            parts.append("Actual (from bills): \(Int(comparison.billBasedAnnualKWh)) kWh/yr")
+            parts.append("Estimated (from audit): \(Int(comparison.estimatedAnnualKWh)) kWh/yr")
+            parts.append("Accuracy: \(comparison.accuracyLabel) (\(Int(comparison.gapPercentage))% gap)")
+            parts.append("")
+        }
+
+        // Envelope
+        if let envScore = profile.envelopeScore {
+            parts.append("BUILDING ENVELOPE: \(envScore.grade) (\(Int(envScore.score))/100)")
+            parts.append("-".repeated(30))
+            for detail in envScore.details {
+                parts.append("- \(detail)")
+            }
+            parts.append("")
+        }
+
         if !allUpgradesByEquipment.isEmpty {
             parts.append("PRIORITIZED UPGRADES (Best Tier)")
             parts.append("-".repeated(30))
@@ -578,6 +931,17 @@ struct HomeReportView: View {
                     parts.append("- \(item.equipment.typeEnum.rawValue): \(best.title)")
                     parts.append("  $\(Int(best.annualSavings))/yr savings, $\(Int(best.costLow))-$\(Int(best.costHigh)) cost, \(pb)\(credit)")
                 }
+            }
+            parts.append("")
+        }
+
+        // Quick wins
+        if !homeRecommendations.isEmpty {
+            parts.append("QUICK WINS & TIPS")
+            parts.append("-".repeated(30))
+            for rec in homeRecommendations {
+                let savings = rec.estimatedSavings.map { " (\($0))" } ?? ""
+                parts.append("- \(rec.title)\(savings)")
             }
             parts.append("")
         }

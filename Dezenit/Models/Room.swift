@@ -15,6 +15,7 @@ final class Room {
     var createdAt: Date
     var scanWasUsed: Bool
     var home: Home?
+    @Relationship(deleteRule: .cascade) var appliances: [Appliance]
 
     init(
         name: String = "",
@@ -38,6 +39,7 @@ final class Room {
         self.calculatedTonnage = calculatedTonnage
         self.createdAt = Date()
         self.scanWasUsed = scanWasUsed
+        self.appliances = []
     }
 
     var windows: [WindowInfo] {

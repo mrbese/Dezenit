@@ -21,6 +21,10 @@ final class Home {
     var climateZone: String // ClimateZone.rawValue
     @Relationship(deleteRule: .cascade) var rooms: [Room]
     @Relationship(deleteRule: .cascade) var equipment: [Equipment]
+    @Relationship(deleteRule: .cascade) var appliances: [Appliance]
+    @Relationship(deleteRule: .cascade) var energyBills: [EnergyBill]
+    @Relationship(deleteRule: .cascade) var auditProgress: [AuditProgress]
+    var envelopeData: Data?
     var createdAt: Date
     var updatedAt: Date
 
@@ -39,6 +43,10 @@ final class Home {
         self.climateZone = climateZone.rawValue
         self.rooms = []
         self.equipment = []
+        self.appliances = []
+        self.energyBills = []
+        self.auditProgress = []
+        self.envelopeData = nil
         self.createdAt = Date()
         self.updatedAt = Date()
     }
@@ -58,5 +66,88 @@ final class Home {
 
     var totalBTU: Double {
         rooms.reduce(0) { $0 + $1.calculatedBTU }
+    }
+
+    // MARK: - Appliance Aggregates
+
+    /// Total annual kWh from all tracked appliances (active use only)
+    var totalApplianceAnnualKWh: Double {
+        appliances.reduce(0) { $0 + $1.annualKWh }
+    }
+
+    /// Total phantom/standby watts across all appliances right now
+    var totalPhantomLoadWatts: Double {
+        appliances.reduce(0) { $0 + $1.categoryEnum.phantomWatts * Double($1.quantity) }
+    }
+
+    /// Total annual kWh wasted on phantom/standby loads
+    var totalPhantomAnnualKWh: Double {
+        appliances.reduce(0) { $0 + $1.phantomAnnualKWh }
+    }
+
+    // MARK: - Bill Aggregates
+
+    /// Annual kWh from bills (average of all uploaded bills, annualized)
+    var billBasedAnnualKWh: Double? {
+        let annualized = energyBills.compactMap(\.annualizedKWh)
+        guard !annualized.isEmpty else { return nil }
+        return annualized.reduce(0, +) / Double(annualized.count)
+    }
+
+    /// Actual electricity rate derived from bills, or default
+    var actualElectricityRate: Double {
+        let rates = energyBills.map(\.computedRate).filter { $0 > 0 }
+        guard !rates.isEmpty else { return Constants.defaultElectricityRate }
+        return rates.reduce(0, +) / Double(rates.count)
+    }
+
+    // MARK: - Audit
+
+    /// Current audit progress (first, since there's one per home)
+    var currentAudit: AuditProgress? {
+        auditProgress.first
+    }
+
+    // MARK: - Envelope
+
+    var envelope: EnvelopeInfo? {
+        get {
+            guard let data = envelopeData else { return nil }
+            return try? JSONDecoder().decode(EnvelopeInfo.self, from: data)
+        }
+        set {
+            envelopeData = try? JSONEncoder().encode(newValue)
+            updatedAt = Date()
+        }
+    }
+}
+
+// MARK: - EnvelopeInfo
+
+struct EnvelopeInfo: Codable, Equatable {
+    var atticInsulation: InsulationQuality
+    var wallInsulation: InsulationQuality
+    var basementInsulation: String // "Uninsulated", "Partial", "Full"
+    var airSealing: String // "Good", "Fair", "Poor"
+    var weatherstripping: String // "Good", "Fair", "Poor"
+    var notes: String?
+
+    static let basementOptions = ["Uninsulated", "Partial", "Full"]
+    static let sealingOptions = ["Good", "Fair", "Poor"]
+
+    init(
+        atticInsulation: InsulationQuality = .average,
+        wallInsulation: InsulationQuality = .average,
+        basementInsulation: String = "Uninsulated",
+        airSealing: String = "Fair",
+        weatherstripping: String = "Fair",
+        notes: String? = nil
+    ) {
+        self.atticInsulation = atticInsulation
+        self.wallInsulation = wallInsulation
+        self.basementInsulation = basementInsulation
+        self.airSealing = airSealing
+        self.weatherstripping = weatherstripping
+        self.notes = notes
     }
 }

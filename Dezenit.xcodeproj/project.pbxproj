@@ -41,6 +41,24 @@
 		D5B2AD3CE5AC6214154EE6C7 /* EquipmentDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8D9F7CE2C912DF24DD3A32 /* EquipmentDetailsView.swift */; };
 		DFF277B11EF1FB497592C961 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B738961A1AB423390AF30F /* ARKit.framework */; };
 		E4025A009CFF658CA4B4A452 /* AgeRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BB96967D104FC11029B179 /* AgeRange.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A1 /* Appliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F1 /* Appliance.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A2 /* EnergyBill.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* EnergyBill.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A3 /* AuditProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F3 /* AuditProgress.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A4 /* ApplianceClassificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F4 /* ApplianceClassificationService.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A5 /* LightingOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F5 /* LightingOCRService.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A6 /* WindowQuestionnaireView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F6 /* WindowQuestionnaireView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A7 /* ApplianceScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F7 /* ApplianceScanView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A8 /* LightingCloseupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F8 /* LightingCloseupView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1A9 /* ApplianceDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F9 /* ApplianceDetailsView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1AA /* ApplianceResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1FA /* ApplianceResultView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1AB /* BillParsingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1FB /* BillParsingService.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1AC /* BillUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1FC /* BillUploadView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1AD /* BillDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1FD /* BillDetailsView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1AE /* BillSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1FE /* BillSummaryView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1AF /* AuditFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F1 /* AuditFlowView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1B0 /* AuditProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F2 /* AuditProgressBar.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1B1 /* EnvelopeAssessmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F3 /* EnvelopeAssessmentView.swift */; };
+		F1E0D9C8B7A6F5E4D3C2B1B2 /* EnergyProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E2F4 /* EnergyProfileService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +97,24 @@
 		EAD61FAFE81596B14157980E /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		F870A1B38BC0971364A338D5 /* Dezenit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dezenit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F98B99473DE65D4EEFE74CA5 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		A1B2C3D4E5F6A7B8C9D0E1F1 /* Appliance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appliance.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* EnergyBill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyBill.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F3 /* AuditProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditProgress.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F4 /* ApplianceClassificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplianceClassificationService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F5 /* LightingOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightingOCRService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F6 /* WindowQuestionnaireView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowQuestionnaireView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F7 /* ApplianceScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplianceScanView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F8 /* LightingCloseupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightingCloseupView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F9 /* ApplianceDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplianceDetailsView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1FA /* ApplianceResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplianceResultView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1FB /* BillParsingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillParsingService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1FC /* BillUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillUploadView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1FD /* BillDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillDetailsView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1FE /* BillSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillSummaryView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E2F1 /* AuditFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditFlowView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E2F2 /* AuditProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditProgressBar.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E2F3 /* EnvelopeAssessmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeAssessmentView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E2F4 /* EnergyProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyProfileService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +134,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		G1A2B3C4D5E6F7A8B9C0D1E4 /* AuditFlow */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E2F1 /* AuditFlowView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E2F2 /* AuditProgressBar.swift */,
+				A1B2C3D4E5F6A7B8C9D0E2F3 /* EnvelopeAssessmentView.swift */,
+			);
+			path = AuditFlow;
+			sourceTree = "<group>";
+		};
+		G1A2B3C4D5E6F7A8B9C0D1E3 /* BillScan */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E1FC /* BillUploadView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1FD /* BillDetailsView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1FE /* BillSummaryView.swift */,
+			);
+			path = BillScan;
+			sourceTree = "<group>";
+		};
+		G1A2B3C4D5E6F7A8B9C0D1E1 /* WindowAssessment */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E1F6 /* WindowQuestionnaireView.swift */,
+			);
+			path = WindowAssessment;
+			sourceTree = "<group>";
+		};
+		G1A2B3C4D5E6F7A8B9C0D1E2 /* ApplianceScan */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E1F7 /* ApplianceScanView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F9 /* ApplianceDetailsView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1FA /* ApplianceResultView.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F8 /* LightingCloseupView.swift */,
+			);
+			path = ApplianceScan;
+			sourceTree = "<group>";
+		};
 		15722AA64BF327D34459BE72 /* RoomScan */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,9 +236,13 @@
 		9C035E7454E6255EF4EA445C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A1B2C3D4E5F6A7B8C9D0E1F4 /* ApplianceClassificationService.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1FB /* BillParsingService.swift */,
 				1E3068B911A82DE30DB15358 /* EfficiencyDatabase.swift */,
 				CC37822444A610D43545C929 /* EnergyCalculator.swift */,
+				A1B2C3D4E5F6A7B8C9D0E2F4 /* EnergyProfileService.swift */,
 				6A1953403A4EAFB8040C0D85 /* GradingEngine.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F5 /* LightingOCRService.swift */,
 				0BC58B6DD0C83F19466EB9FD /* OCRService.swift */,
 				4BC24A901CAE93DBBD54D9BE /* RecommendationEngine.swift */,
 				B0CDC592D83F169C46EAF5C7 /* RoomCaptureService.swift */,
@@ -175,9 +254,13 @@
 		9F58BDF7D4F04F6C4DC3CB6C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				15722AA64BF327D34459BE72 /* RoomScan */,
+				G1A2B3C4D5E6F7A8B9C0D1E2 /* ApplianceScan */,
+				G1A2B3C4D5E6F7A8B9C0D1E4 /* AuditFlow */,
+				G1A2B3C4D5E6F7A8B9C0D1E3 /* BillScan */,
 				18E50222503637B73118C92E /* EquipmentScan */,
 				5ABA4F45E97506E0875A62BD /* Report */,
+				15722AA64BF327D34459BE72 /* RoomScan */,
+				G1A2B3C4D5E6F7A8B9C0D1E1 /* WindowAssessment */,
 				84F6C2237660E937555657D3 /* HomeDashboardView.swift */,
 				6ABFABD0FB529862C9C7E126 /* HomeListView.swift */,
 			);
@@ -196,7 +279,10 @@
 			isa = PBXGroup;
 			children = (
 				21BB96967D104FC11029B179 /* AgeRange.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F1 /* Appliance.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F3 /* AuditProgress.swift */,
 				B5ABD272ED616F79E16A552D /* ClimateZone.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* EnergyBill.swift */,
 				30AE5019C4C71130E3E5BB60 /* Equipment.swift */,
 				A6FA192441F3FB94FB68D99F /* EquipmentType.swift */,
 				EAD61FAFE81596B14157980E /* Home.swift */,
@@ -289,13 +375,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4025A009CFF658CA4B4A452 /* AgeRange.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A1 /* Appliance.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A4 /* ApplianceClassificationService.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1AD /* BillDetailsView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1AB /* BillParsingService.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1AE /* BillSummaryView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1AC /* BillUploadView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A9 /* ApplianceDetailsView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1AA /* ApplianceResultView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A7 /* ApplianceScanView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1AF /* AuditFlowView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A3 /* AuditProgress.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1B0 /* AuditProgressBar.swift in Sources */,
 				15F9380410D5373398F8FA1A /* ClimateZone.swift in Sources */,
 				010EA0BE2F4A4A5900F3E8AD /* UpgradeEngine.swift in Sources */,
 				06F3EA1E59EB6218E60764E1 /* Constants.swift in Sources */,
 				9EA4F15A623E5A4CE66B4A7B /* DetailsView.swift in Sources */,
 				BC70286DD2F99455834484C4 /* DezenitApp.swift in Sources */,
 				04A5AFE0F86F107C2A1B0952 /* EfficiencyDatabase.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A2 /* EnergyBill.swift in Sources */,
 				B6C2972B7391230FA46BABBC /* EnergyCalculator.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1B2 /* EnergyProfileService.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1B1 /* EnvelopeAssessmentView.swift in Sources */,
 				25420D318A12DD96AE1E4111 /* Equipment.swift in Sources */,
 				156721E5C91380295DE2093E /* EquipmentCameraView.swift in Sources */,
 				D5B2AD3CE5AC6214154EE6C7 /* EquipmentDetailsView.swift in Sources */,
@@ -307,6 +408,8 @@
 				7606CC1749010B46B99D17D4 /* HomeListView.swift in Sources */,
 				C165121F0D39BE8C90098111 /* HomeReportView.swift in Sources */,
 				58C8B2E2FE6104B7C63B88C0 /* InsulationQuality.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A8 /* LightingCloseupView.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A5 /* LightingOCRService.swift in Sources */,
 				4DB3AB8042C542DD4A7EAC28 /* OCRService.swift in Sources */,
 				BB5FCD64E44E997499226530 /* RecommendationEngine.swift in Sources */,
 				027707383DF1564F1E5D0E2D /* ReportPDFGenerator.swift in Sources */,
@@ -315,6 +418,7 @@
 				7718D4B8B6303B27BDF9E79E /* RoomCaptureService.swift in Sources */,
 				A67A5054EB4F62DF376ADB7E /* ScanView.swift in Sources */,
 				D10C78969BAD8C84AB9BA727 /* WindowInfo.swift in Sources */,
+				F1E0D9C8B7A6F5E4D3C2B1A6 /* WindowQuestionnaireView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,13 @@ struct DezenitApp: App {
         WindowGroup {
             HomeListView()
         }
-        .modelContainer(for: [Home.self, Room.self, Equipment.self])
+        .modelContainer(for: [
+            Home.self,
+            Room.self,
+            Equipment.self,
+            Appliance.self,
+            EnergyBill.self,
+            AuditProgress.self
+        ])
     }
 }

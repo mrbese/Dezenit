@@ -72,4 +72,85 @@ enum RecommendationEngine {
 
         return recommendations
     }
+
+    // MARK: - Home-Level Recommendations
+
+    static func generateHomeRecommendations(for home: Home) -> [Recommendation] {
+        var recommendations: [Recommendation] = []
+        let rate = home.actualElectricityRate
+
+        // --- Envelope-based ---
+        if let env = home.envelope {
+            if env.atticInsulation == .poor {
+                recommendations.append(Recommendation(
+                    icon: "house.and.flag",
+                    title: "Upgrade Attic Insulation",
+                    detail: "Your attic insulation is rated Poor. Upgrading to R-49 can reduce heating/cooling costs by 15–25% and improve comfort year-round.",
+                    estimatedSavings: "15–25% HVAC savings"
+                ))
+            }
+            if env.airSealing == "Poor" {
+                recommendations.append(Recommendation(
+                    icon: "wind",
+                    title: "Professional Air Sealing",
+                    detail: "Poor air sealing allows conditioned air to escape through gaps around pipes, wiring, and ductwork. Professional sealing typically costs $350–$700 and pays back in 1–2 years.",
+                    estimatedSavings: "$150–$300/yr"
+                ))
+            }
+            if env.weatherstripping == "Poor" {
+                recommendations.append(Recommendation(
+                    icon: "door.left.hand.open",
+                    title: "Replace Weatherstripping",
+                    detail: "Worn weatherstripping around doors and windows lets drafts in. Replacement is a low-cost DIY project ($20–$50 per door) with immediate comfort improvement.",
+                    estimatedSavings: "$50–$100/yr"
+                ))
+            }
+        }
+
+        // --- Appliance-based ---
+        let incandescents = home.appliances.filter { $0.categoryEnum == .incandescentBulb }
+        let totalIncandescentQty = incandescents.reduce(0) { $0 + $1.quantity }
+        if totalIncandescentQty > 0 {
+            // Calculate savings: incandescent ~60W → LED ~9W, delta = 51W per bulb
+            let avgHours = incandescents.isEmpty ? 5.0 : incandescents.reduce(0.0) { $0 + $1.hoursPerDay } / Double(incandescents.count)
+            let annualSavings = Double(totalIncandescentQty) * 0.051 * avgHours * 365 * rate
+            recommendations.append(Recommendation(
+                icon: "lightbulb.led",
+                title: "Switch \(totalIncandescentQty) Incandescent Bulb\(totalIncandescentQty == 1 ? "" : "s") to LED",
+                detail: "LED bulbs use ~85% less energy and last 15–25x longer. Switching \(totalIncandescentQty) incandescent bulb\(totalIncandescentQty == 1 ? "" : "s") saves energy immediately with no comfort trade-off.",
+                estimatedSavings: "$\(Int(annualSavings))/yr"
+            ))
+        }
+
+        let phantomKWh = home.totalPhantomAnnualKWh
+        if phantomKWh > 100 {
+            let phantomCost = phantomKWh * rate
+            let savingsWithStrip = phantomCost * Constants.PhantomLoads.smartPowerStripSavings
+            recommendations.append(Recommendation(
+                icon: "powerplug",
+                title: "Smart Power Strips for Phantom Loads",
+                detail: "Your devices waste ~\(Int(phantomKWh)) kWh/yr ($\(Int(phantomCost))) on standby power. Smart power strips cut phantom loads by up to 75% by automatically disconnecting idle devices.",
+                estimatedSavings: "$\(Int(savingsWithStrip))/yr"
+            ))
+        }
+
+        // --- Behavioral ---
+        recommendations.append(Recommendation(
+            icon: "thermometer.and.target",
+            title: "Thermostat Setback Schedule",
+            detail: "Setting your thermostat back 7–10°F for 8 hours/day (while sleeping or away) can save up to 10% on heating and cooling annually — no equipment purchase needed.",
+            estimatedSavings: "Up to 10% HVAC savings"
+        ))
+
+        if let billKWh = home.billBasedAnnualKWh, billKWh > 8000 {
+            recommendations.append(Recommendation(
+                icon: "clock.arrow.2.circlepath",
+                title: "Shift Usage to Off-Peak Hours",
+                detail: "With annual usage around \(Int(billKWh)) kWh, shifting laundry, dishwasher, and EV charging to off-peak hours (typically 9pm–6am) can reduce costs if your utility offers time-of-use rates.",
+                estimatedSavings: "5–15% bill reduction"
+            ))
+        }
+
+        return recommendations
+    }
 }

@@ -41,4 +41,21 @@ enum Constants {
     // Default energy rates
     static let defaultElectricityRate: Double = 0.16 // $/kWh
     static let defaultGasRate: Double = 1.20 // $/therm
+
+    // MARK: - Appliance Wattage Defaults
+
+    /// Common bulb wattages for quick-select in lighting audit
+    enum CommonBulbWattages {
+        static let led: [Double] = [5, 7, 9, 12, 15, 18]
+        static let cfl: [Double] = [9, 13, 18, 23, 26]
+        static let incandescent: [Double] = [40, 60, 75, 100, 150]
+    }
+
+    /// Phantom load (standby) values for common device categories
+    enum PhantomLoads {
+        static let entertainmentCenter: Double = 25 // TV + soundbar + streaming + game console
+        static let homeOffice: Double = 12 // desktop + monitor + router
+        static let kitchen: Double = 8 // microwave + coffee maker + toaster
+        static let smartPowerStripSavings: Double = 0.75 // 75% phantom reduction
+    }
 }

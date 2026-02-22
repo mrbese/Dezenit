@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct HomeDashboardView: View {
     @Environment(\.modelContext) private var modelContext
@@ -7,13 +8,24 @@ struct HomeDashboardView: View {
     @State private var showingScan = false
     @State private var showingManualRoom = false
     @State private var showingEquipmentScan = false
+    @State private var showingApplianceScan = false
+    @State private var showingApplianceManual = false
+    @State private var showingLightingScan = false
+    @State private var showingBillScan = false
+    @State private var showingBillManual = false
+    @State private var showingBillDetails = false
+    @State private var showingBillDetailsPrefill: (ParsedBillResult, UIImage)?
+    @State private var showingAuditFlow = false
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
+                auditBanner
                 summaryCard
                 roomsSection
                 equipmentSection
+                appliancesSection
+                billsSection
                 reportButton
             }
             .padding()
@@ -32,6 +44,179 @@ struct HomeDashboardView: View {
             EquipmentDetailsView(home: home, onComplete: {
                 showingEquipmentScan = false
             })
+        }
+        .sheet(isPresented: $showingApplianceScan) {
+            ApplianceScanView { result, image in
+                showingApplianceScan = false
+                // Navigate to details with prefilled data
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showingApplianceDetailsPrefill = (result.category, image)
+                    showingApplianceDetails = true
+                }
+            }
+        }
+        .sheet(isPresented: $showingApplianceManual) {
+            ApplianceDetailsView(home: home, onComplete: {
+                showingApplianceManual = false
+            })
+        }
+        .sheet(isPresented: $showingApplianceDetails) {
+            if let (category, image) = showingApplianceDetailsPrefill {
+                ApplianceDetailsView(
+                    home: home,
+                    prefilledCategory: category,
+                    prefilledImage: image,
+                    detectionMethod: "camera",
+                    onComplete: { showingApplianceDetails = false }
+                )
+            }
+        }
+        .sheet(isPresented: $showingLightingScan) {
+            LightingCloseupView { result, image in
+                showingLightingScan = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showingLightingDetailsPrefill = (result, image)
+                    showingLightingDetails = true
+                }
+            }
+        }
+        .sheet(isPresented: $showingLightingDetails) {
+            if let (result, _) = showingLightingDetailsPrefill {
+                ApplianceDetailsView(
+                    home: home,
+                    prefilledCategory: result.bulbType ?? .ledBulb,
+                    prefilledWattage: result.wattage,
+                    detectionMethod: "ocr",
+                    onComplete: { showingLightingDetails = false }
+                )
+            }
+        }
+        .sheet(isPresented: $showingBillScan) {
+            BillUploadView(
+                onResult: { result, image in
+                    showingBillScan = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showingBillDetailsPrefill = (result, image)
+                        showingBillDetails = true
+                    }
+                },
+                onManual: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showingBillManual = true
+                    }
+                }
+            )
+        }
+        .sheet(isPresented: $showingBillManual) {
+            BillDetailsView(home: home, onComplete: {
+                showingBillManual = false
+            })
+        }
+        .sheet(isPresented: $showingBillDetails) {
+            if let (result, image) = showingBillDetailsPrefill {
+                BillDetailsView(
+                    home: home,
+                    prefilledResult: result,
+                    prefilledImage: image,
+                    onComplete: { showingBillDetails = false }
+                )
+            }
+        }
+        .sheet(isPresented: $showingAuditFlow) {
+            AuditFlowView(home: home)
+        }
+    }
+
+    // Additional state for camera→details flow
+    @State private var showingApplianceDetails = false
+    @State private var showingApplianceDetailsPrefill: (ApplianceCategory, UIImage)?
+    @State private var showingLightingDetails = false
+    @State private var showingLightingDetailsPrefill: (BulbOCRResult, UIImage)?
+
+    // MARK: - Audit Banner
+
+    private var auditBanner: some View {
+        Group {
+            if let audit = home.currentAudit {
+                if audit.isComplete {
+                    // Completed audit badge
+                    HStack(spacing: 12) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.title2)
+                            .foregroundStyle(Constants.accentColor)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Audit Complete")
+                                .font(.subheadline.bold())
+                            Text("All 10 steps finished")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Text("\(Int(audit.progressPercentage))%")
+                            .font(.title3.bold().monospacedDigit())
+                            .foregroundStyle(Constants.accentColor)
+                    }
+                    .padding(14)
+                    .background(Constants.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                } else {
+                    // In-progress audit
+                    Button { showingAuditFlow = true } label: {
+                        HStack(spacing: 12) {
+                            // Mini progress ring
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 3)
+                                    .frame(width: 36, height: 36)
+                                Circle()
+                                    .trim(from: 0, to: audit.progressPercentage / 100)
+                                    .stroke(Constants.accentColor, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                                    .frame(width: 36, height: 36)
+                                    .rotationEffect(.degrees(-90))
+                                Text("\(Int(audit.progressPercentage))%")
+                                    .font(.system(size: 9, weight: .bold).monospacedDigit())
+                            }
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Continue Audit")
+                                    .font(.subheadline.bold())
+                                Text("Step \(audit.currentStepEnum.stepNumber): \(audit.currentStepEnum.rawValue)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(14)
+                        .background(Constants.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                    }
+                    .buttonStyle(.plain)
+                }
+            } else {
+                // No audit yet — start CTA
+                Button { showingAuditFlow = true } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "checklist")
+                            .font(.title2)
+                            .foregroundStyle(.white)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Start Full Audit")
+                                .font(.subheadline.bold())
+                            Text("10-step guided energy assessment")
+                                .font(.caption)
+                                .opacity(0.8)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .opacity(0.7)
+                    }
+                    .foregroundStyle(.white)
+                    .padding(14)
+                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
 
@@ -65,6 +250,12 @@ struct HomeDashboardView: View {
                     }
                     Label("\(home.rooms.count) room\(home.rooms.count == 1 ? "" : "s")", systemImage: "square.split.2x2")
                     Label("\(home.equipment.count) equipment", systemImage: "wrench")
+                    if !home.appliances.isEmpty {
+                        Label("\(home.appliances.count) appliance\(home.appliances.count == 1 ? "" : "s")", systemImage: "tv")
+                    }
+                    if !home.energyBills.isEmpty {
+                        Label("\(home.energyBills.count) bill\(home.energyBills.count == 1 ? "" : "s")", systemImage: "doc.text")
+                    }
                     Label(home.climateZoneEnum.rawValue, systemImage: "thermometer")
                 }
                 .font(.subheadline)
@@ -204,6 +395,221 @@ struct HomeDashboardView: View {
         }
     }
 
+    // MARK: - Appliances
+
+    private var appliancesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Appliances")
+                    .font(.headline)
+                Spacer()
+                Menu {
+                    Button(action: { showingApplianceScan = true }) {
+                        Label("Scan with Camera", systemImage: "camera.fill")
+                    }
+                    Button(action: { showingLightingScan = true }) {
+                        Label("Scan Bulb Label", systemImage: "lightbulb")
+                    }
+                    Button(action: { showingApplianceManual = true }) {
+                        Label("Enter Manually", systemImage: "pencil")
+                    }
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(Constants.accentColor)
+                }
+            }
+
+            if home.appliances.isEmpty {
+                Text("No appliances tracked yet. Scan or add appliances, lighting, and electronics.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 8)
+            } else {
+                // Summary row
+                let totalKWh = home.totalApplianceAnnualKWh
+                let totalCost = totalKWh * home.actualElectricityRate
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("\(Int(totalKWh)) kWh/yr")
+                            .font(.subheadline.bold().monospacedDigit())
+                        Text("Total usage")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("$\(Int(totalCost))/yr")
+                            .font(.subheadline.bold().monospacedDigit())
+                            .foregroundStyle(Constants.accentColor)
+                        Text("Total cost")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    if home.totalPhantomLoadWatts > 0 {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(Int(home.totalPhantomLoadWatts))W")
+                                .font(.subheadline.bold().monospacedDigit())
+                                .foregroundStyle(.orange)
+                            Text("Standby")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Constants.accentColor.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
+
+                ForEach(home.appliances) { appliance in
+                    HStack(spacing: 12) {
+                        Image(systemName: appliance.categoryEnum.icon)
+                            .font(.title3)
+                            .foregroundStyle(Constants.accentColor)
+                            .frame(width: 28)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(appliance.name)
+                                .font(.subheadline.bold())
+                            HStack(spacing: 4) {
+                                Text("\(Int(appliance.estimatedWattage))W")
+                                Text("·")
+                                Text(formatHours(appliance.hoursPerDay) + " hrs/day")
+                                if appliance.quantity > 1 {
+                                    Text("· x\(appliance.quantity)")
+                                }
+                            }
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Text("$\(Int(appliance.annualCost()))/yr")
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(Constants.accentColor)
+                    }
+                    .padding(12)
+                    .background(.background, in: RoundedRectangle(cornerRadius: 10))
+                    .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            modelContext.delete(appliance)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Energy Bills
+
+    private var billsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Energy Bills")
+                    .font(.headline)
+                Spacer()
+                Menu {
+                    Button(action: { showingBillScan = true }) {
+                        Label("Scan Bill", systemImage: "camera.fill")
+                    }
+                    Button(action: { showingBillManual = true }) {
+                        Label("Enter Manually", systemImage: "pencil")
+                    }
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(Constants.accentColor)
+                }
+            }
+
+            if home.energyBills.isEmpty {
+                Text("No bills uploaded yet. Add utility bills to improve cost estimates.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 8)
+            } else {
+                // Summary row
+                let avgRate = home.actualElectricityRate
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(format: "$%.3f/kWh", avgRate))
+                            .font(.subheadline.bold().monospacedDigit())
+                            .foregroundStyle(Constants.accentColor)
+                        Text("Avg rate")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    if let annualKWh = home.billBasedAnnualKWh {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(Int(annualKWh)) kWh/yr")
+                                .font(.subheadline.bold().monospacedDigit())
+                            Text("Annualized")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("\(home.energyBills.count) bill\(home.energyBills.count == 1 ? "" : "s")")
+                            .font(.subheadline.bold().monospacedDigit())
+                        Text("Uploaded")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Constants.accentColor.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
+
+                ForEach(home.energyBills) { bill in
+                    NavigationLink {
+                        BillSummaryView(bill: bill)
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "doc.text")
+                                .font(.title3)
+                                .foregroundStyle(Constants.accentColor)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                if let name = bill.utilityName {
+                                    Text(name)
+                                        .font(.subheadline.bold())
+                                } else {
+                                    Text("Utility Bill")
+                                        .font(.subheadline.bold())
+                                }
+                                if let start = bill.billingPeriodStart {
+                                    let formatter = DateFormatter()
+                                    let _ = (formatter.dateFormat = "MMM yyyy")
+                                    Text(formatter.string(from: start))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer()
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text("\(Int(bill.totalKWh)) kWh")
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(Constants.accentColor)
+                                Text(String(format: "$%.2f", bill.totalCost))
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(12)
+                        .background(.background, in: RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                    }
+                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            modelContext.delete(bill)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: - Report
 
     private var reportButton: some View {
@@ -230,5 +636,10 @@ struct HomeDashboardView: View {
                 }
             }
         }
+    }
+
+    private func formatHours(_ hours: Double) -> String {
+        if hours == floor(hours) { return String(Int(hours)) }
+        return String(format: "%.1f", hours)
     }
 }

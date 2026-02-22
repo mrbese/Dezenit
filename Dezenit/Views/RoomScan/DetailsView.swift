@@ -21,6 +21,7 @@ struct DetailsView: View {
     @State private var windows: [WindowInfo] = []
     @State private var showingResults = false
     @State private var savedRoom: Room?
+    @State private var windowQuestionnaireIndex: WindowEditID?
 
     @StateObject private var locationDetector = ClimateZoneDetector()
 
@@ -60,6 +61,11 @@ struct DetailsView: View {
             .navigationDestination(isPresented: $showingResults) {
                 if let room = savedRoom {
                     ResultsView(room: room, onComplete: onComplete)
+                }
+            }
+            .sheet(item: $windowQuestionnaireIndex) { editID in
+                if editID.index >= 0 && editID.index < windows.count {
+                    WindowQuestionnaireView(window: $windows[editID.index])
                 }
             }
             .onAppear {
@@ -107,8 +113,10 @@ struct DetailsView: View {
 
     private var windowsSection: some View {
         Section {
-            ForEach($windows) { $window in
-                WindowRowView(window: $window)
+            ForEach(Array(windows.enumerated()), id: \.element.id) { index, _ in
+                WindowRowView(window: $windows[index]) {
+                    windowQuestionnaireIndex = WindowEditID(index: index)
+                }
             }
             .onDelete { indexSet in
                 windows.remove(atOffsets: indexSet)
@@ -128,7 +136,7 @@ struct DetailsView: View {
                         .foregroundStyle(Constants.accentColor)
                 }
                 if !windows.isEmpty {
-                    Text("Swipe left to remove a window.")
+                    Text("Tap the info button to assess pane type and condition.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -210,10 +218,11 @@ struct DetailsView: View {
     }
 }
 
-// MARK: - Window row
+// MARK: - Window row (enhanced)
 
 private struct WindowRowView: View {
     @Binding var window: WindowInfo
+    var onAssess: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
@@ -222,32 +231,61 @@ private struct WindowRowView: View {
                 .frame(width: 24)
 
             VStack(alignment: .leading, spacing: 4) {
-                Picker("Direction", selection: $window.direction) {
-                    ForEach(CardinalDirection.allCases) { dir in
-                        Text(dir.fullName).tag(dir)
+                HStack(spacing: 8) {
+                    Picker("Direction", selection: $window.direction) {
+                        ForEach(CardinalDirection.allCases) { dir in
+                            Text(dir.fullName).tag(dir)
+                        }
                     }
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
+                    .pickerStyle(.menu)
+                    .labelsHidden()
 
-                Picker("Size", selection: $window.size) {
-                    ForEach(WindowSize.allCases) { size in
-                        Text(size.description).tag(size)
+                    Picker("Size", selection: $window.size) {
+                        ForEach(WindowSize.allCases) { size in
+                            Text(size.description).tag(size)
+                        }
                     }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .font(.caption)
                 }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .font(.caption)
+
+                // Enhanced info line
+                HStack(spacing: 6) {
+                    Text(window.paneType.label)
+                    Text("·")
+                    Text(window.frameMaterial.rawValue)
+                    Text("·")
+                    Text(window.condition.rawValue)
+                }
+                .font(.caption2)
+                .foregroundStyle(.secondary)
             }
 
             Spacer()
 
-            Text("+\(Int(window.heatGainBTU).formatted()) BTU")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .monospacedDigit()
+            VStack(alignment: .trailing, spacing: 2) {
+                Text("+\(Int(window.heatGainBTU).formatted()) BTU")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .monospacedDigit()
+
+                // Info/assess button
+                Button(action: onAssess) {
+                    Image(systemName: "info.circle")
+                        .font(.caption)
+                        .foregroundStyle(Constants.accentColor)
+                }
+                .buttonStyle(.plain)
+            }
         }
     }
+}
+
+/// Wrapper to make an index Identifiable for sheet(item:) presentation
+struct WindowEditID: Identifiable {
+    let id = UUID()
+    let index: Int
 }
 
 // MARK: - Location-based climate zone detection

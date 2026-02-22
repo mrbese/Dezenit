@@ -81,6 +81,98 @@ enum GradingEngine {
         }
     }
 
+    // MARK: - Home-Level Grade (weighted composite)
+
+    static func grade(for home: Home) -> EfficiencyGrade {
+        var weightedSum: Double = 0
+        var totalWeight: Double = 0
+
+        // Equipment ratio (base 60% weight)
+        let equipmentRatio = weightedEfficiencyRatio(for: home.equipment)
+        let hasEquipment = !home.equipment.isEmpty
+        let hasAppliances = !home.appliances.isEmpty
+        let hasEnvelope = home.envelope != nil
+
+        // Determine weights based on available data
+        let equipWeight: Double
+        let applianceWeight: Double
+        let envelopeWeight: Double
+
+        switch (hasAppliances, hasEnvelope) {
+        case (true, true):
+            equipWeight = 0.60; applianceWeight = 0.20; envelopeWeight = 0.20
+        case (true, false):
+            equipWeight = 0.75; applianceWeight = 0.25; envelopeWeight = 0
+        case (false, true):
+            equipWeight = 0.75; applianceWeight = 0; envelopeWeight = 0.25
+        case (false, false):
+            equipWeight = 1.0; applianceWeight = 0; envelopeWeight = 0
+        }
+
+        if hasEquipment {
+            weightedSum += equipmentRatio * equipWeight
+            totalWeight += equipWeight
+        }
+
+        // Appliance ratio: penalize incandescent, high phantom; bonus for LED-dominant
+        if hasAppliances {
+            let applianceRatio = applianceEfficiencyRatio(for: home)
+            weightedSum += applianceRatio * applianceWeight
+            totalWeight += applianceWeight
+        }
+
+        // Envelope ratio from EnergyProfileService scoring
+        if hasEnvelope {
+            if let envScore = EnergyProfileService.scoreEnvelope(for: home) {
+                let envelopeRatio = envScore.score / 100.0
+                weightedSum += envelopeRatio * envelopeWeight
+                totalWeight += envelopeWeight
+            }
+        }
+
+        guard totalWeight > 0 else { return .c }
+        return gradeFromRatio(weightedSum / totalWeight)
+    }
+
+    private static func applianceEfficiencyRatio(for home: Home) -> Double {
+        let appliances = home.appliances
+        guard !appliances.isEmpty else { return 0.5 }
+
+        var score: Double = 0.5 // baseline
+
+        // Count lighting types
+        let lightingAppliances = appliances.filter { $0.categoryEnum.isLighting }
+        let totalLightingQty = lightingAppliances.reduce(0) { $0 + $1.quantity }
+
+        if totalLightingQty > 0 {
+            let ledQty = lightingAppliances
+                .filter { $0.categoryEnum == .ledBulb }
+                .reduce(0) { $0 + $1.quantity }
+            let incandescentQty = lightingAppliances
+                .filter { $0.categoryEnum == .incandescentBulb }
+                .reduce(0) { $0 + $1.quantity }
+
+            let ledRatio = Double(ledQty) / Double(totalLightingQty)
+            let incandescentRatio = Double(incandescentQty) / Double(totalLightingQty)
+
+            // LED-dominant bonus (up to +0.25), incandescent penalty (up to -0.25)
+            score += ledRatio * 0.25
+            score -= incandescentRatio * 0.25
+        }
+
+        // Phantom load penalty: if phantom > 15% of active use, penalize
+        let totalActiveKWh = home.totalApplianceAnnualKWh
+        let totalPhantomKWh = home.totalPhantomAnnualKWh
+        if totalActiveKWh > 0 {
+            let phantomRatio = totalPhantomKWh / totalActiveKWh
+            if phantomRatio > 0.15 {
+                score -= min((phantomRatio - 0.15) * 0.5, 0.15)
+            }
+        }
+
+        return min(max(score, 0), 1)
+    }
+
     // Worst-case efficiency values for each equipment type
     private static func worstCase(for type: EquipmentType) -> Double {
         switch type {

@@ -6,6 +6,7 @@ struct EquipmentDetailsView: View {
     @Environment(\.dismiss) private var dismiss
 
     let home: Home
+    var allowedTypes: [EquipmentType]? = nil
     var onComplete: (() -> Void)? = nil
 
     @State private var equipmentType: EquipmentType = .centralAC
@@ -62,11 +63,16 @@ struct EquipmentDetailsView: View {
     private var typeSection: some View {
         Section("Equipment Type") {
             Picker("Type", selection: $equipmentType) {
-                ForEach(EquipmentType.allCases) { type in
+                ForEach(allowedTypes ?? Array(EquipmentType.allCases)) { type in
                     Label(type.rawValue, systemImage: type.icon).tag(type)
                 }
             }
             .pickerStyle(.navigationLink)
+        }
+        .onAppear {
+            if let first = allowedTypes?.first, !allowedTypes!.contains(equipmentType) {
+                equipmentType = first
+            }
         }
     }
 
