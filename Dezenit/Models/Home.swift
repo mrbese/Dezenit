@@ -21,7 +21,7 @@ final class Home {
     var climateZone: String // ClimateZone.rawValue
     @Relationship(deleteRule: .cascade) var rooms: [Room]
     @Relationship(deleteRule: .cascade) var equipment: [Equipment]
-    @Relationship(deleteRule: .cascade) var appliances: [Appliance]
+    @Relationship(deleteRule: .cascade, inverse: \Appliance.home) var appliances: [Appliance]
     @Relationship(deleteRule: .cascade) var energyBills: [EnergyBill]
     @Relationship(deleteRule: .cascade) var auditProgress: [AuditProgress]
     var envelopeData: Data?

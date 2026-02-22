@@ -11,11 +11,12 @@ enum ReportPDFGenerator {
         let renderer = ImageRenderer(content: reportView)
         renderer.scale = 2.0
 
-        var pdfData = Data()
+        let pdfData = NSMutableData()
 
         renderer.render { size, renderInContext in
             var box = CGRect(origin: .zero, size: size)
-            guard let context = CGContext(consumer: CGDataConsumer(data: pdfData as! CFMutableData)!, mediaBox: &box, nil) else { return }
+            guard let consumer = CGDataConsumer(data: pdfData as CFMutableData),
+                  let context = CGContext(consumer: consumer, mediaBox: &box, nil) else { return }
 
             context.beginPDFPage(nil)
             renderInContext(context)
@@ -23,7 +24,7 @@ enum ReportPDFGenerator {
             context.closePDF()
         }
 
-        return pdfData.isEmpty ? nil : pdfData
+        return pdfData.length > 0 ? pdfData as Data : nil
     }
 
     @MainActor
