@@ -14,6 +14,9 @@
 		010EA0C72F4CE8FD00F3E8AD /* AppleSignInCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010EA0C62F4CE8FD00F3E8AD /* AppleSignInCoordinator.swift */; };
 		010EA0C92F4CE90200F3E8AD /* NotificationPermissionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010EA0C82F4CE90200F3E8AD /* NotificationPermissionService.swift */; };
 		010EA0CB2F4CE95C00F3E8AD /* OnboardingStepViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010EA0CA2F4CE95C00F3E8AD /* OnboardingStepViews.swift */; };
+		010EA0CE2F4CF5C800F3E8AD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010EA0CD2F4CF5C800F3E8AD /* SettingsView.swift */; };
+		010EA0D02F4CF5CC00F3E8AD /* ReportTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010EA0CF2F4CF5CC00F3E8AD /* ReportTabView.swift */; };
+		010EA0D22F4CF5E700F3E8AD /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010EA0D12F4CF5E700F3E8AD /* MainTabView.swift */; };
 		027707383DF1564F1E5D0E2D /* ReportPDFGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534162E70EEFA36E4F41B432 /* ReportPDFGenerator.swift */; };
 		049CE24D97483D4021270191 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F98B99473DE65D4EEFE74CA5 /* Vision.framework */; };
 		04A5AFE0F86F107C2A1B0952 /* EfficiencyDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3068B911A82DE30DB15358 /* EfficiencyDatabase.swift */; };
@@ -82,6 +85,9 @@
 		010EA0C62F4CE8FD00F3E8AD /* AppleSignInCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInCoordinator.swift; sourceTree = "<group>"; };
 		010EA0C82F4CE90200F3E8AD /* NotificationPermissionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionService.swift; sourceTree = "<group>"; };
 		010EA0CA2F4CE95C00F3E8AD /* OnboardingStepViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepViews.swift; sourceTree = "<group>"; };
+		010EA0CD2F4CF5C800F3E8AD /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		010EA0CF2F4CF5CC00F3E8AD /* ReportTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTabView.swift; sourceTree = "<group>"; };
+		010EA0D12F4CF5E700F3E8AD /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		03F7657B7D1F469D8F6554C1 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		0860CF48A2239E1C9C8CED4B /* WindowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowInfo.swift; sourceTree = "<group>"; };
 		0B8D9F7CE2C912DF24DD3A32 /* EquipmentDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentDetailsView.swift; sourceTree = "<group>"; };
@@ -159,6 +165,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		010EA0CC2F4CF5AC00F3E8AD /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				010EA0CD2F4CF5C800F3E8AD /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		15722AA64BF327D34459BE72 /* RoomScan */ = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +221,7 @@
 			children = (
 				6600F2D44B51F6A31862B9CA /* HomeReportView.swift */,
 				534162E70EEFA36E4F41B432 /* ReportPDFGenerator.swift */,
+				010EA0CF2F4CF5CC00F3E8AD /* ReportTabView.swift */,
 			);
 			path = Report;
 			sourceTree = "<group>";
@@ -266,6 +281,8 @@
 				G1A2B3C4D5E6F7A8B9C0D1E1 /* WindowAssessment */,
 				84F6C2237660E937555657D3 /* HomeDashboardView.swift */,
 				6ABFABD0FB529862C9C7E126 /* HomeListView.swift */,
+				010EA0CC2F4CF5AC00F3E8AD /* Settings */,
+				010EA0D12F4CF5E700F3E8AD /* MainTabView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -435,6 +452,7 @@
 				010EA0C52F4CE8F400F3E8AD /* OnboardingCard.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1A4 /* ApplianceClassificationService.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1AD /* BillDetailsView.swift in Sources */,
+				010EA0D22F4CF5E700F3E8AD /* MainTabView.swift in Sources */,
 				010EA0C72F4CE8FD00F3E8AD /* AppleSignInCoordinator.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1AB /* BillParsingService.swift in Sources */,
 				F1E0D9C8B7A6F5E4D3C2B1AE /* BillSummaryView.swift in Sources */,
@@ -448,6 +466,7 @@
 				F1E0D9C8B7A6F5E4D3C2B1B0 /* AuditProgressBar.swift in Sources */,
 				15F9380410D5373398F8FA1A /* ClimateZone.swift in Sources */,
 				010EA0BE2F4A4A5900F3E8AD /* UpgradeEngine.swift in Sources */,
+				010EA0CE2F4CF5C800F3E8AD /* SettingsView.swift in Sources */,
 				06F3EA1E59EB6218E60764E1 /* Constants.swift in Sources */,
 				9EA4F15A623E5A4CE66B4A7B /* DetailsView.swift in Sources */,
 				BC70286DD2F99455834484C4 /* ManorOSApp.swift in Sources */,
@@ -477,6 +496,7 @@
 				027707383DF1564F1E5D0E2D /* ReportPDFGenerator.swift in Sources */,
 				4FCF91EACA591894E8C36675 /* ResultsView.swift in Sources */,
 				904FD64E559C097CAB49D67F /* Room.swift in Sources */,
+				010EA0D02F4CF5CC00F3E8AD /* ReportTabView.swift in Sources */,
 				7718D4B8B6303B27BDF9E79E /* RoomCaptureService.swift in Sources */,
 				A67A5054EB4F62DF376ADB7E /* ScanView.swift in Sources */,
 				010EA0CB2F4CE95C00F3E8AD /* OnboardingStepViews.swift in Sources */,

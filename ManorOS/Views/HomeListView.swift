@@ -124,7 +124,7 @@ struct HomeListView: View {
 
 // MARK: - Home Row
 
-private struct HomeRowView: View {
+struct HomeRowView: View {
     let home: Home
 
     var body: some View {
@@ -158,7 +158,7 @@ private struct HomeRowView: View {
 
 // MARK: - Add Home Sheet
 
-private struct AddHomeSheet: View {
+struct AddHomeSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
     @State private var address = ""

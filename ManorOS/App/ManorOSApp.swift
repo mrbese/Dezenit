@@ -64,7 +64,7 @@ struct ManorOSApp: App {
     var body: some Scene {
         WindowGroup {
             if hasSeenOnboarding {
-                HomeListView()
+                MainTabView()
             } else {
                 OnboardingView()
             }

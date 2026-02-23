@@ -3,6 +3,7 @@ import UIKit
 
 struct HomeReportView: View {
     let home: Home
+    var isEmbedded: Bool = false
     @Environment(\.dismiss) private var dismiss
     @State private var gradeRevealed = false
     @State private var showingPDFShare = false
@@ -123,7 +124,9 @@ struct HomeReportView: View {
                     batterySynergySection
                 }
                 shareSection
-                doneSection
+                if !isEmbedded {
+                    doneSection
+                }
             }
             .padding()
         }

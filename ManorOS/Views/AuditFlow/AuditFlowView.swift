@@ -6,6 +6,7 @@ struct AuditFlowView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Bindable var home: Home
+    var isEmbedded: Bool = false
 
     @State private var currentStep: AuditStep = .homeBasics
     @State private var audit: AuditProgress?
@@ -28,140 +29,150 @@ struct AuditFlowView: View {
     private let waterTypes: [EquipmentType] = [.waterHeater, .waterHeaterTankless]
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                if let audit {
-                    AuditProgressBar(auditProgress: audit, currentStep: currentStep)
-                }
-
-                // Step content
-                stepContent
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .animation(.easeInOut(duration: 0.25), value: currentStep)
-
-                // Bottom buttons (hidden for envelope — it has its own Save flow)
-                if currentStep != .envelopeAssessment {
-                    bottomBar
-                }
-            }
-            .navigationTitle("Home Audit")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Close") { dismiss() }
-                }
-            }
-            .onAppear { setupAudit() }
-            // Camera sheets
-            .sheet(isPresented: $showingScan) {
-                ScanView(home: home)
-            }
-            .sheet(isPresented: $showingApplianceScan) {
-                ApplianceScanView { result, image in
-                    showingApplianceScan = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        appliancePrefill = (result.category, image)
-                        showingApplianceDetails = true
-                    }
-                }
-            }
-            .sheet(isPresented: $showingApplianceDetails) {
-                if let (category, image) = appliancePrefill {
-                    ApplianceDetailsView(
-                        home: home,
-                        prefilledCategory: category,
-                        prefilledImage: image,
-                        detectionMethod: "camera",
-                        onComplete: { showingApplianceDetails = false }
-                    )
-                }
-            }
-            .sheet(isPresented: $showingLightingScan) {
-                LightingCloseupView { result, image in
-                    showingLightingScan = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        lightingPrefill = (result, image)
-                        showingLightingDetails = true
-                    }
-                }
-            }
-            .sheet(isPresented: $showingLightingDetails) {
-                if let (result, image) = lightingPrefill {
-                    ApplianceDetailsView(
-                        home: home,
-                        prefilledCategory: result.bulbType ?? .ledBulb,
-                        prefilledWattage: result.wattage,
-                        prefilledImage: image,
-                        detectionMethod: "ocr",
-                        onComplete: { showingLightingDetails = false }
-                    )
-                }
-            }
-            .sheet(isPresented: $showingBillScan) {
-                BillUploadView(
-                    onResult: { result, image in
-                        showingBillScan = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            billPrefill = (result, image)
-                            showingBillDetails = true
-                        }
-                    },
-                    onManual: {
-                        showingBillScan = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            showingBillDetails = true
+        if isEmbedded {
+            flowContent
+                .navigationTitle("Home Audit")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            NavigationStack {
+                flowContent
+                    .navigationTitle("Home Audit")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Close") { dismiss() }
                         }
                     }
-                )
             }
-            .sheet(isPresented: $showingBillDetails) {
-                if let (result, image) = billPrefill {
-                    BillDetailsView(
-                        home: home,
-                        prefilledResult: result,
-                        prefilledImage: image,
-                        onComplete: { showingBillDetails = false }
-                    )
-                } else {
-                    BillDetailsView(home: home, onComplete: { showingBillDetails = false })
+        }
+    }
+
+    private var flowContent: some View {
+        VStack(spacing: 0) {
+            if let audit {
+                AuditProgressBar(auditProgress: audit, currentStep: currentStep)
+            }
+
+            // Step content
+            stepContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .animation(.easeInOut(duration: 0.25), value: currentStep)
+
+            // Bottom buttons (hidden for envelope — it has its own Save flow)
+            if currentStep != .envelopeAssessment {
+                bottomBar
+            }
+        }
+        .onAppear { setupAudit() }
+        // Camera sheets
+        .sheet(isPresented: $showingScan) {
+            ScanView(home: home)
+        }
+        .sheet(isPresented: $showingApplianceScan) {
+            ApplianceScanView { result, image in
+                showingApplianceScan = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    appliancePrefill = (result.category, image)
+                    showingApplianceDetails = true
                 }
             }
-            // Equipment & room sheets (moved from bottom bar background)
-            .sheet(isPresented: $showingEquipmentSheet) {
-                EquipmentDetailsView(
-                    home: home,
-                    allowedTypes: pendingEquipmentTypes.isEmpty ? nil : pendingEquipmentTypes,
-                    onComplete: { showingEquipmentSheet = false }
-                )
-            }
-            .sheet(isPresented: $showingManualRoom) {
-                DetailsView(squareFootage: nil, home: home, onComplete: {
-                    showingManualRoom = false
-                })
-            }
-            .sheet(isPresented: $showingApplianceManual) {
-                ApplianceDetailsView(home: home, onComplete: { showingApplianceManual = false })
-            }
-            .sheet(isPresented: $showingLightingManual) {
+        }
+        .sheet(isPresented: $showingApplianceDetails) {
+            if let (category, image) = appliancePrefill {
                 ApplianceDetailsView(
                     home: home,
-                    prefilledCategory: .ledBulb,
-                    onComplete: { showingLightingManual = false }
+                    prefilledCategory: category,
+                    prefilledImage: image,
+                    detectionMethod: "camera",
+                    onComplete: { showingApplianceDetails = false }
                 )
             }
-            .sheet(item: $windowEditRoom) { room in
-                DetailsView(squareFootage: nil, home: home, existingRoom: room, onComplete: {
-                    windowEditRoom = nil
-                })
+        }
+        .sheet(isPresented: $showingLightingScan) {
+            LightingCloseupView { result, image in
+                showingLightingScan = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    lightingPrefill = (result, image)
+                    showingLightingDetails = true
+                }
             }
-            .sheet(item: $auditEditingRoom) { room in
-                DetailsView(squareFootage: nil, home: home, existingRoom: room, onComplete: {
-                    auditEditingRoom = nil
-                })
+        }
+        .sheet(isPresented: $showingLightingDetails) {
+            if let (result, image) = lightingPrefill {
+                ApplianceDetailsView(
+                    home: home,
+                    prefilledCategory: result.bulbType ?? .ledBulb,
+                    prefilledWattage: result.wattage,
+                    prefilledImage: image,
+                    detectionMethod: "ocr",
+                    onComplete: { showingLightingDetails = false }
+                )
             }
-            .sheet(item: $scanningPlaceholderRoom) { room in
-                ScanView(home: home, existingRoom: room)
+        }
+        .sheet(isPresented: $showingBillScan) {
+            BillUploadView(
+                onResult: { result, image in
+                    showingBillScan = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        billPrefill = (result, image)
+                        showingBillDetails = true
+                    }
+                },
+                onManual: {
+                    showingBillScan = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showingBillDetails = true
+                    }
+                }
+            )
+        }
+        .sheet(isPresented: $showingBillDetails) {
+            if let (result, image) = billPrefill {
+                BillDetailsView(
+                    home: home,
+                    prefilledResult: result,
+                    prefilledImage: image,
+                    onComplete: { showingBillDetails = false }
+                )
+            } else {
+                BillDetailsView(home: home, onComplete: { showingBillDetails = false })
             }
+        }
+        // Equipment & room sheets (moved from bottom bar background)
+        .sheet(isPresented: $showingEquipmentSheet) {
+            EquipmentDetailsView(
+                home: home,
+                allowedTypes: pendingEquipmentTypes.isEmpty ? nil : pendingEquipmentTypes,
+                onComplete: { showingEquipmentSheet = false }
+            )
+        }
+        .sheet(isPresented: $showingManualRoom) {
+            DetailsView(squareFootage: nil, home: home, onComplete: {
+                showingManualRoom = false
+            })
+        }
+        .sheet(isPresented: $showingApplianceManual) {
+            ApplianceDetailsView(home: home, onComplete: { showingApplianceManual = false })
+        }
+        .sheet(isPresented: $showingLightingManual) {
+            ApplianceDetailsView(
+                home: home,
+                prefilledCategory: .ledBulb,
+                onComplete: { showingLightingManual = false }
+            )
+        }
+        .sheet(item: $windowEditRoom) { room in
+            DetailsView(squareFootage: nil, home: home, existingRoom: room, onComplete: {
+                windowEditRoom = nil
+            })
+        }
+        .sheet(item: $auditEditingRoom) { room in
+            DetailsView(squareFootage: nil, home: home, existingRoom: room, onComplete: {
+                auditEditingRoom = nil
+            })
+        }
+        .sheet(item: $scanningPlaceholderRoom) { room in
+            ScanView(home: home, existingRoom: room)
         }
     }
 
