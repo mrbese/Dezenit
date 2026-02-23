@@ -24,7 +24,7 @@ struct HomeListView: View {
                     homeList
                 }
             }
-            .navigationTitle(homes.count == 1 ? (homes[0].name.isEmpty ? "Home" : homes[0].name) : "Dezenit")
+            .navigationTitle(homes.count == 1 ? (homes[0].name.isEmpty ? "Home" : homes[0].name) : "Manor OS")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 if !homes.isEmpty {
@@ -66,7 +66,7 @@ struct HomeListView: View {
                     .foregroundStyle(Constants.accentColor)
 
                 VStack(spacing: 8) {
-                    Text("Dezenit")
+                    Text("Manor OS")
                         .font(.largeTitle.bold())
 
                     Text("Your home energy audit,\nright in your pocket")

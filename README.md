@@ -1,14 +1,14 @@
-# Dezenit
+# Manor OS
 
 **Open-source iOS home energy assessment tool. Scan rooms with LiDAR, photograph equipment for OCR efficiency analysis, get prioritized upgrade recommendations with payback periods and battery synergy insights. Built on ACCA Manual J and ASHRAE standards.**
 
-[dezenit.com](https://dezenit.com)
+[manoros.com](https://manoros.com)
 
 ---
 
 ## What It Does
 
-Dezenit turns your iPhone into a residential energy auditor. Walk through your home, scan each room with LiDAR, photograph your HVAC equipment labels, and get a comprehensive efficiency report with prioritized upgrades ranked by return on investment.
+Manor OS turns your iPhone into a residential energy auditor. Walk through your home, scan each room with LiDAR, photograph your HVAC equipment labels, and get a comprehensive efficiency report with prioritized upgrades ranked by return on investment.
 
 ### Room Scanning
 - Apple RoomPlan API detects floor area via LiDAR
@@ -34,7 +34,7 @@ Dezenit turns your iPhone into a residential energy auditor. Walk through your h
 
 An inefficient building envelope directly cannibalizes the value of home battery systems. A poorly insulated home draws 5-6 kW on a summer afternoon, leaving a battery inverter exporting barely half its rated output during peak grid events when electricity prices spike to $2,000-$5,000/MWh.
 
-Dezenit quantifies this: for each home, it calculates how much additional battery export capacity passive efficiency upgrades would unlock. Upgrading attic insulation to R-49 and sealing ducts to <4% leakage can liberate 1.5-2 kW of additional export capacity from the same battery hardware, translating to 30-40% more grid revenue with zero additional battery cost.
+Manor OS quantifies this: for each home, it calculates how much additional battery export capacity passive efficiency upgrades would unlock. Upgrading attic insulation to R-49 and sealing ducts to <4% leakage can liberate 1.5-2 kW of additional export capacity from the same battery hardware, translating to 30-40% more grid revenue with zero additional battery cost.
 
 This insight is based on ASHRAE standards, ACCA Manual J methodology, and field audit data from LADWP Commercial Lighting Incentive Program (CLIP) assessments.
 
@@ -87,10 +87,10 @@ Swift, SwiftUI, SwiftData, RoomPlan, ARKit, AVFoundation, Vision (OCR), CoreLoca
 ## Project Structure
 
 ```
-Dezenit/
-  Dezenit/
+ManorOS/
+  ManorOS/
     App/
-      DezenitApp.swift
+      ManorOSApp.swift
     Models/
       Home.swift                    SwiftData model, contains rooms + equipment
       Room.swift                    Room model, linked to Home

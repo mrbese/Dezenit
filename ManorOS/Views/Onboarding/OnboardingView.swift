@@ -77,7 +77,7 @@ struct OnboardingView: View {
                     .foregroundStyle(Constants.accentColor)
             }
 
-            Text("Dezenit")
+            Text("Manor OS")
                 .font(.largeTitle.bold())
                 .foregroundStyle(.white)
 

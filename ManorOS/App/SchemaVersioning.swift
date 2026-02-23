@@ -15,7 +15,7 @@ enum SchemaV1: VersionedSchema {
     }
 }
 
-enum DezenitMigrationPlan: SchemaMigrationPlan {
+enum ManorOSMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
         [SchemaV1.self]
     }
