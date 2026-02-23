@@ -115,7 +115,7 @@ struct HomeReportView: View {
                     .frame(maxWidth: .infinity)
                     .padding(16)
                     .background(.background, in: RoundedRectangle(cornerRadius: 16))
-                    .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+                    .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
                 }
                 if let state = stateDetector.detectedState {
                     rebateSection(state: state)
@@ -152,7 +152,7 @@ struct HomeReportView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(home.name.isEmpty ? "Home Assessment" : home.name)
                         .font(.title3.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     if home.computedTotalSqFt > 0 {
                         Text("\(Int(home.computedTotalSqFt)) sq ft")
                             .font(.subheadline)
@@ -163,7 +163,7 @@ struct HomeReportView: View {
                 VStack(spacing: 2) {
                     Text(grade.rawValue)
                         .font(.system(size: 56, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .accessibilityLabel("Efficiency grade \(grade.rawValue)")
                     Text("Grade")
                         .font(.caption)
@@ -177,7 +177,7 @@ struct HomeReportView: View {
                 VStack(spacing: 2) {
                     Text("\(home.rooms.count)")
                         .font(.title2.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Rooms")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -185,7 +185,7 @@ struct HomeReportView: View {
                 VStack(spacing: 2) {
                     Text("\(home.equipment.count)")
                         .font(.title2.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Equipment")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -194,7 +194,7 @@ struct HomeReportView: View {
                     VStack(spacing: 2) {
                         Text("\(Int(home.totalBTU / 12000))")
                             .font(.title2.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
                         Text("Tons HVAC")
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.7))
@@ -209,7 +209,7 @@ struct HomeReportView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 20))
     }
 
     // MARK: - Cost
@@ -234,7 +234,7 @@ struct HomeReportView: View {
                     Spacer()
                     Text("$\(Int(totalUpgradedCost).formatted())/yr")
                         .font(.subheadline)
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.manor.success)
                 }
 
                 Divider()
@@ -245,13 +245,13 @@ struct HomeReportView: View {
                     Spacer()
                     Text("$\(Int(totalSavings).formatted())/yr")
                         .font(.title2.bold())
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.manor.success)
                 }
             }
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     // MARK: - Upgrade Summary Stats
@@ -270,19 +270,19 @@ struct HomeReportView: View {
             Text("Upgrade Investment Summary")
                 .font(.headline)
 
-            statRow("Total potential savings", "$\(Int(totalSav).formatted())/yr", color: .green)
+            statRow("Total potential savings", "$\(Int(totalSav).formatted())/yr", color: Color.manor.success)
             statRow("Total investment range", "$\(Int(totalCostLow).formatted()) – $\(Int(totalCostHigh).formatted())", color: .primary)
-            statRow("Average payback period", String(format: "%.1f years", avgPayback), color: avgPayback < 5 ? Constants.statusSuccess : Constants.statusWarning)
+            statRow("Average payback period", String(format: "%.1f years", avgPayback), color: avgPayback < 5 ? Color.manor.success : Color.manor.warning)
 
             if totalCredits > 0 {
                 Divider()
-                statRow("After tax credits", "$\(Int(afterCreditsLow).formatted()) – $\(Int(afterCreditsHigh).formatted())", color: .blue)
-                statRow("Effective payback", String(format: "%.1f years", afterCreditsPayback), color: afterCreditsPayback < 5 ? Constants.statusSuccess : Constants.statusWarning)
+                statRow("After tax credits", "$\(Int(afterCreditsLow).formatted()) – $\(Int(afterCreditsHigh).formatted())", color: Color.manor.info)
+                statRow("Effective payback", String(format: "%.1f years", afterCreditsPayback), color: afterCreditsPayback < 5 ? Color.manor.success : Color.manor.warning)
             }
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     private func statRow(_ label: String, _ value: String, color: Color) -> some View {
@@ -327,7 +327,7 @@ struct HomeReportView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Image(systemName: eq.typeEnum.icon)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                         .frame(width: 24)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(eq.typeEnum.rawValue)
@@ -350,7 +350,7 @@ struct HomeReportView: View {
                                 .foregroundStyle(.secondary)
                             Text("$\(Int(b.annualSavings))/yr")
                                 .font(.caption.bold())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                         }
                         VStack(alignment: .leading, spacing: 1) {
                             Text("Cost Range")
@@ -375,7 +375,7 @@ struct HomeReportView: View {
                                     .foregroundStyle(.secondary)
                                 Text("$\(Int(b.taxCreditAmount))")
                                     .font(.caption.bold())
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(Color.manor.info)
                             }
                         }
                     }
@@ -384,7 +384,7 @@ struct HomeReportView: View {
         }
         .padding(14)
         .background(.background, in: RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 6, y: 2)
     }
 
     private func tierCard(_ rec: UpgradeRecommendation) -> some View {
@@ -399,7 +399,7 @@ struct HomeReportView: View {
             if rec.alreadyMeetsThisTier {
                 Text("Your equipment already meets this tier")
                     .font(.caption2)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.manor.success)
             }
 
             Text(rec.explanation)
@@ -419,7 +419,7 @@ struct HomeReportView: View {
                         Text("Savings")
                             .font(.caption2).foregroundStyle(.secondary)
                         Text("$\(Int(rec.annualSavings))/yr")
-                            .font(.caption2.bold()).foregroundStyle(.green)
+                            .font(.caption2.bold()).foregroundStyle(Color.manor.success)
                     }
                 }
                 if let pb = rec.paybackYears {
@@ -435,7 +435,7 @@ struct HomeReportView: View {
                         Text("Tax Credit")
                             .font(.caption2).foregroundStyle(.secondary)
                         Text("$\(Int(rec.taxCreditAmount))")
-                            .font(.caption2.bold()).foregroundStyle(.blue)
+                            .font(.caption2.bold()).foregroundStyle(Color.manor.info)
                     }
                 }
             }
@@ -447,7 +447,7 @@ struct HomeReportView: View {
     private func tierBadge(_ tier: UpgradeTier) -> some View {
         Text(tier.rawValue)
             .font(.caption2.bold())
-            .foregroundStyle(.white)
+            .foregroundStyle(Color.manor.onPrimary)
             .padding(.horizontal, 7)
             .padding(.vertical, 2)
             .background(tierBackgroundColor(tier), in: Capsule())
@@ -486,7 +486,7 @@ struct HomeReportView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "chart.bar.fill")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Energy Breakdown")
                     .font(.headline)
             }
@@ -530,7 +530,7 @@ struct HomeReportView: View {
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     private func categoryColor(_ name: String) -> Color {
@@ -552,7 +552,7 @@ struct HomeReportView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
                     Image(systemName: "doc.text.magnifyingglass")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                     Text("Bill vs. Estimate")
                         .font(.headline)
                 }
@@ -595,7 +595,7 @@ struct HomeReportView: View {
             }
             .padding(16)
             .background(.background, in: RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+            .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
         }
     }
 
@@ -619,7 +619,7 @@ struct HomeReportView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "bolt.fill")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Top Energy Consumers")
                     .font(.headline)
             }
@@ -628,9 +628,9 @@ struct HomeReportView: View {
                 HStack(spacing: 10) {
                     Text("#\(index + 1)")
                         .font(.caption2.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .frame(width: 22, height: 22)
-                        .background(Constants.accentColor.opacity(0.8), in: Circle())
+                        .background(Color.manor.primary.opacity(0.8), in: Circle())
                     Image(systemName: consumer.icon)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -654,13 +654,13 @@ struct HomeReportView: View {
                     Spacer()
                     Text("\(Int(phantomKWh)) kWh · $\(Int(phantomCost))/yr")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.manor.warning)
                 }
             }
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     // MARK: - Envelope Summary
@@ -671,7 +671,7 @@ struct HomeReportView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 8) {
                     Image(systemName: "shield.lefthalf.filled")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                     Text("Building Envelope")
                         .font(.headline)
                     Spacer()
@@ -700,16 +700,16 @@ struct HomeReportView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "exclamationmark.triangle")
                             .font(.caption)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.manor.warning)
                         Text("Priority: \(weakest)")
                             .font(.caption)
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Color.manor.warning)
                     }
                 }
             }
             .padding(16)
             .background(.background, in: RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+            .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
         }
     }
 
@@ -739,7 +739,7 @@ struct HomeReportView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "sparkles")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Quick Wins & Tips")
                     .font(.headline)
             }
@@ -748,7 +748,7 @@ struct HomeReportView: View {
                 HStack(alignment: .top, spacing: 10) {
                     Image(systemName: rec.icon)
                         .font(.subheadline)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                         .frame(width: 24, alignment: .center)
                         .padding(.top, 2)
                     VStack(alignment: .leading, spacing: 4) {
@@ -761,7 +761,7 @@ struct HomeReportView: View {
                         if let savings = rec.estimatedSavings {
                             Text(savings)
                                 .font(.caption.bold())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                         }
                     }
                 }
@@ -772,7 +772,7 @@ struct HomeReportView: View {
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     // MARK: - Tax Credit Summary
@@ -783,7 +783,7 @@ struct HomeReportView: View {
         return VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "building.columns.fill")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.manor.info)
                 Text("Federal Tax Credits")
                     .font(.headline)
             }
@@ -794,7 +794,7 @@ struct HomeReportView: View {
                         .font(.caption.bold())
                     Text("Eligible credits: $\(Int(credits.total25C))")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.manor.info)
                     Text("Annual cap: $3,200 per year")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -807,7 +807,7 @@ struct HomeReportView: View {
                         .font(.caption.bold())
                     Text("Eligible credits: $\(Int(credits.total25D))")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.manor.info)
                     Text("No annual cap")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -822,7 +822,7 @@ struct HomeReportView: View {
                 Spacer()
                 Text("$\(Int(credits.grandTotal).formatted())")
                     .font(.title3.bold())
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.manor.info)
             }
 
             Text("Tax credits are subject to eligibility requirements and may change. Consult a qualified tax professional before making purchasing decisions based on tax incentives.")
@@ -832,7 +832,7 @@ struct HomeReportView: View {
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     // MARK: - Rebates
@@ -843,7 +843,7 @@ struct HomeReportView: View {
         return VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "dollarsign.arrow.circlepath")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.manor.success)
                 Text("State & Utility Rebates")
                     .font(.headline)
             }
@@ -868,7 +868,7 @@ struct HomeReportView: View {
                         HStack {
                             Text(rebate.amountDescription)
                                 .font(.caption.bold())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                             Spacer()
                             Text(rebate.programName)
                                 .font(.caption)
@@ -881,7 +881,7 @@ struct HomeReportView: View {
                         if let expNote = rebate.expirationNote {
                             Text(expNote)
                                 .font(.caption2)
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(Color.manor.warning)
                         }
                     }
                     .padding(12)
@@ -907,7 +907,7 @@ struct HomeReportView: View {
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     // MARK: - Battery Synergy
@@ -916,7 +916,7 @@ struct HomeReportView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "battery.100.bolt")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Battery Synergy")
                     .font(.headline)
             }
@@ -951,7 +951,7 @@ struct HomeReportView: View {
         }
         .padding(16)
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     private func infoRow(_ label: String, _ value: String) -> some View {
@@ -976,8 +976,8 @@ struct HomeReportView: View {
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
-                .foregroundStyle(.white)
+                .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
+                .foregroundStyle(Color.manor.onPrimary)
             }
 
             Button {
@@ -1011,10 +1011,10 @@ struct HomeReportView: View {
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 14))
-            .foregroundStyle(Constants.accentColor)
+            .foregroundStyle(Color.manor.primary)
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .stroke(Constants.accentColor, lineWidth: 1.5)
+                    .stroke(Color.manor.primary, lineWidth: 1.5)
             )
         }
         .padding(.top, 8)

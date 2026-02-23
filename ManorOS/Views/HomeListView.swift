@@ -63,7 +63,7 @@ struct HomeListView: View {
             VStack(spacing: 16) {
                 Image(systemName: "house.fill")
                     .font(.system(size: 64))
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
 
                 VStack(spacing: 8) {
                     Text("Manor OS")
@@ -89,9 +89,9 @@ struct HomeListView: View {
                         .font(.caption)
                         .opacity(0.7)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
                 .padding()
-                .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
+                .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
             }
             .padding(.horizontal, 32)
 
@@ -137,7 +137,7 @@ struct HomeRowView: View {
                     let grade = GradingEngine.grade(for: home.equipment)
                     Text(grade.rawValue)
                         .font(.headline.bold())
-                        .foregroundStyle(Constants.gradeColor(grade))
+                        .foregroundStyle(ManorColors.gradeColor(grade))
                         .accessibilityLabel("Efficiency grade \(grade.rawValue)")
                 }
             }
@@ -209,7 +209,7 @@ struct AddHomeSheet: View {
                                 }
                             }
                             .frame(width: 20, height: 20)
-                            .foregroundStyle(Constants.accentColor)
+                            .foregroundStyle(Color.manor.primary)
                         }
                         .buttonStyle(.plain)
                         .disabled(addressService.isResolving)
@@ -250,7 +250,7 @@ struct AddHomeSheet: View {
                             span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
                         ))) {
                             Marker("", coordinate: coordinate)
-                                .tint(Constants.accentColor)
+                                .tint(Color.manor.primary)
                         }
                         .frame(height: 140)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -300,7 +300,7 @@ struct AddHomeSheet: View {
                         HStack(spacing: 6) {
                             Image(systemName: "location.fill")
                                 .font(.caption)
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                             Text("Based on your location (\(city))")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)

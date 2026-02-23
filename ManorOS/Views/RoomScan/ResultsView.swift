@@ -69,7 +69,7 @@ struct ResultsView: View {
 
             Text("\(Int(breakdown.finalBTU).formatted())")
                 .font(.system(size: 56, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             Text("BTU/hr Required")
                 .font(.subheadline)
@@ -83,7 +83,7 @@ struct ResultsView: View {
                 VStack(spacing: 2) {
                     Text(String(format: "%.1f", breakdown.tonnage))
                         .font(.title2.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Tons")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.75))
@@ -91,7 +91,7 @@ struct ResultsView: View {
                 VStack(spacing: 2) {
                     Text("\(Int(room.squareFootage))")
                         .font(.title2.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Sq Ft")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.75))
@@ -99,7 +99,7 @@ struct ResultsView: View {
                 VStack(spacing: 2) {
                     Text(room.climateZoneEnum.rawValue)
                         .font(.title3.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Climate")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.75))
@@ -108,7 +108,7 @@ struct ResultsView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity)
-        .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 20))
     }
 
     // MARK: - Breakdown
@@ -162,14 +162,14 @@ struct ResultsView: View {
                     Spacer()
                     Text("\(Int(breakdown.finalBTU).formatted())")
                         .font(.headline)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
             }
         }
         .background(.background, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 8, y: 2)
     }
 
     private func breakdownRow(label: String, detail: String, value: Double, sign: String) -> some View {
@@ -181,7 +181,7 @@ struct ResultsView: View {
             Spacer()
             Text("\(sign)\(Int(abs(value)).formatted())")
                 .font(.subheadline.monospacedDigit())
-                .foregroundStyle(value < 0 ? Constants.statusSuccess : .primary)
+                .foregroundStyle(value < 0 ? Color.manor.success : .primary)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -234,7 +234,7 @@ private struct RecommendationCard: View {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: recommendation.icon)
                     .font(.title3)
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                     .frame(width: 28)
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -254,15 +254,15 @@ private struct RecommendationCard: View {
                     Text(savings)
                         .font(.caption)
                 }
-                .foregroundStyle(Constants.statusSuccess)
+                .foregroundStyle(Color.manor.success)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(Constants.statusSuccess.opacity(0.1), in: Capsule())
+                .background(Color.manor.success.opacity(0.1), in: Capsule())
             }
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.background, in: RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+        .shadow(color: Color.manor.background.opacity(0.06), radius: 6, y: 2)
     }
 }

@@ -20,7 +20,7 @@ struct EquipmentCameraView: View {
                 // Guide text
                 Text(equipmentType.cameraPrompt)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
@@ -48,7 +48,7 @@ struct EquipmentCameraView: View {
                 HStack {
                     Button(action: { dismiss() }) {
                         Text("Cancel")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 12)
                     }

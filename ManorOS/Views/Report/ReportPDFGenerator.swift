@@ -255,27 +255,27 @@ enum ReportPDFGenerator {
         switch style {
         case .title:
             font = UIFont.systemFont(ofSize: 22, weight: .bold)
-            color = UIColor(red: 0.102, green: 0.478, blue: 0.298, alpha: 1) // accent
+            color = ManorColors.pdf.title
             paragraphStyle.lineSpacing = 6
         case .heading:
             font = UIFont.systemFont(ofSize: 14, weight: .bold)
-            color = UIColor(red: 0.102, green: 0.478, blue: 0.298, alpha: 1) // accent
+            color = ManorColors.pdf.heading
             paragraphStyle.paragraphSpacingBefore = 8
         case .label:
             font = UIFont.systemFont(ofSize: 11, weight: .semibold)
             color = .darkGray
         case .body:
             font = UIFont.systemFont(ofSize: 11, weight: .regular)
-            color = .black
+            color = ManorColors.pdf.body
         case .caption:
             font = UIFont.systemFont(ofSize: 9, weight: .regular)
             color = .gray
         case .highlight:
             font = UIFont.systemFont(ofSize: 11, weight: .bold)
-            color = UIColor(red: 0.0, green: 0.6, blue: 0.0, alpha: 1) // green
+            color = ManorColors.pdf.highlight
         case .gradeValue:
             font = UIFont.systemFont(ofSize: 18, weight: .bold)
-            color = UIColor(red: 0.102, green: 0.478, blue: 0.298, alpha: 1)
+            color = ManorColors.pdf.grade
         }
 
         return NSAttributedString(string: string, attributes: [

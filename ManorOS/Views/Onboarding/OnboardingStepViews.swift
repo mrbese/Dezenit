@@ -24,10 +24,10 @@ struct WelcomeHomeTypeStep: View {
             VStack(spacing: 12) {
                 Text("Welcome to Manor OS!")
                     .font(.title.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
                 Text("Let's begin here")
                     .font(.title3)
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(Color.manor.textSecondary)
             }
 
             VStack(spacing: 12) {
@@ -65,20 +65,20 @@ struct AddressEntryStep: View {
 
                 Text("Setting up home")
                     .font(.title.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
 
                 VStack(alignment: .leading, spacing: 12) {
                     // Address field with location button
                     HStack(spacing: 0) {
                         Image(systemName: "magnifyingglass")
-                            .foregroundStyle(.white.opacity(0.4))
+                            .foregroundStyle(Color.manor.textTertiary)
                             .padding(.leading, 14)
                         TextField("Enter your address", text: $address)
                             .textFieldStyle(.plain)
                             .textContentType(.fullStreetAddress)
                             .focused($addressFieldFocused)
                             .padding(12)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.textPrimary)
                             .onChange(of: address) { _, newValue in
                                 addressService.updateQuery(newValue)
                                 if newValue != addressService.selectedAddress {
@@ -86,7 +86,7 @@ struct AddressEntryStep: View {
                                 }
                             }
                     }
-                    .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+                    .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 12))
 
                     // Find my address button
                     Button {
@@ -100,14 +100,14 @@ struct AddressEntryStep: View {
                     } label: {
                         HStack(spacing: 8) {
                             if addressService.isResolving {
-                                ProgressView().tint(Constants.accentColor)
+                                ProgressView().tint(Color.manor.primary)
                             } else {
                                 Image(systemName: "location.fill")
                             }
                             Text("Find my address")
                                 .font(.subheadline.weight(.medium))
                         }
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                     }
                     .disabled(addressService.isResolving)
                     .padding(.leading, 4)
@@ -128,12 +128,12 @@ struct AddressEntryStep: View {
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(suggestion.title)
                                             .font(.subheadline)
-                                            .foregroundStyle(.white)
+                                            .foregroundStyle(Color.manor.textPrimary)
                                             .lineLimit(1)
                                         if !suggestion.subtitle.isEmpty {
                                             Text(suggestion.subtitle)
                                                 .font(.caption)
-                                                .foregroundStyle(.white.opacity(0.5))
+                                                .foregroundStyle(Color.manor.textTertiary)
                                                 .lineLimit(1)
                                         }
                                     }
@@ -142,11 +142,11 @@ struct AddressEntryStep: View {
                                     .padding(.vertical, 10)
                                 }
                                 if suggestion != addressService.suggestions.prefix(4).last {
-                                    Divider().background(Color.white.opacity(0.1))
+                                    Divider().background(Color.manor.outlineVariant)
                                 }
                             }
                         }
-                        .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 12))
                     }
 
                     // Map preview
@@ -156,7 +156,7 @@ struct AddressEntryStep: View {
                             span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
                         ))) {
                             Marker("", coordinate: coordinate)
-                                .tint(Constants.accentColor)
+                                .tint(Color.manor.primary)
                         }
                         .frame(height: 150)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -173,13 +173,13 @@ struct AddressEntryStep: View {
                                 Text("Why?")
                             }
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.5))
+                            .foregroundStyle(Color.manor.textTertiary)
                         }
                         Spacer()
                         Button(action: onSkip) {
                             Text("Skip")
                                 .font(.subheadline.weight(.medium))
-                                .foregroundStyle(.white.opacity(0.5))
+                                .foregroundStyle(Color.manor.textTertiary)
                         }
                     }
                     .padding(.top, 4)
@@ -194,24 +194,24 @@ struct AddressEntryStep: View {
             VStack(spacing: 16) {
                 Image(systemName: "location.fill")
                     .font(.largeTitle)
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Why we ask for your address")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
                 Text("Your address helps us automatically detect your climate zone, which affects heating and cooling calculations for your energy audit.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(Color.manor.textSecondary)
                     .multilineTextAlignment(.center)
                 Button("Got it") { showWhySheet = false }
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 12))
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 12))
             }
             .padding(32)
             .presentationDetents([.height(300)])
-            .presentationBackground(Color(white: 0.12))
+            .presentationBackground(Color.manor.surfaceContainerHighest)
         }
     }
 }
@@ -232,26 +232,26 @@ struct HomeDetailsStep: View {
 
                 Text("Home Details")
                     .font(.title.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
 
                 VStack(spacing: 20) {
                     // Home name
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Home Name")
                             .font(.caption.bold())
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(Color.manor.textSecondary)
                         TextField("My Home", text: $homeName)
                             .textFieldStyle(.plain)
                             .padding(12)
-                            .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
-                            .foregroundStyle(.white)
+                            .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 10))
+                            .foregroundStyle(Color.manor.textPrimary)
                     }
 
                     // Year built
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Year Built")
                             .font(.caption.bold())
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(Color.manor.textSecondary)
                         HStack(spacing: 6) {
                             ForEach(YearRange.allCases) { yr in
                                 Button {
@@ -264,7 +264,7 @@ struct HomeDetailsStep: View {
                                         .padding(.vertical, 10)
                                         .frame(maxWidth: .infinity)
                                         .background(
-                                            yearBuilt == yr ? Constants.accentColor : Color.white.opacity(0.08),
+                                            yearBuilt == yr ? Color.manor.primary : Color.manor.surfaceContainerHigh,
                                             in: RoundedRectangle(cornerRadius: 8)
                                         )
                                 }
@@ -277,27 +277,27 @@ struct HomeDetailsStep: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Total Sq Ft (optional)")
                             .font(.caption.bold())
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(Color.manor.textSecondary)
                         TextField("e.g. 1800", text: $sqFtText)
                             .textFieldStyle(.plain)
                             .keyboardType(.numberPad)
                             .padding(12)
-                            .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
-                            .foregroundStyle(.white)
+                            .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 10))
+                            .foregroundStyle(Color.manor.textPrimary)
                     }
 
                     // Climate zone
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Climate Zone")
                             .font(.caption.bold())
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(Color.manor.textSecondary)
 
                         if let city = locationDetector.detectedCity {
                             HStack(spacing: 6) {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(Constants.accentColor)
+                                    .foregroundStyle(Color.manor.primary)
                                 Text("Detected: \(city)")
-                                    .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(Color.manor.textSecondary)
                             }
                             .font(.subheadline)
                         }
@@ -309,15 +309,15 @@ struct HomeDetailsStep: View {
                                         VStack(alignment: .leading, spacing: 2) {
                                             Text(zone.rawValue)
                                                 .font(.subheadline.bold())
-                                                .foregroundStyle(.white)
+                                                .foregroundStyle(Color.manor.textPrimary)
                                             Text(zone.description)
                                                 .font(.caption)
-                                                .foregroundStyle(.white.opacity(0.5))
+                                                .foregroundStyle(Color.manor.textTertiary)
                                         }
                                         Spacer()
                                         if climateZone == zone {
                                             Image(systemName: "checkmark.circle.fill")
-                                                .foregroundStyle(Constants.accentColor)
+                                                .foregroundStyle(Color.manor.primary)
                                         }
                                     }
                                 }
@@ -347,11 +347,11 @@ struct RoomsStep: View {
 
             Text("How many rooms?")
                 .font(.title.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.textPrimary)
 
             Text("We'll create placeholders you can scan later.")
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.6))
+                .foregroundStyle(Color.manor.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
 
@@ -371,10 +371,10 @@ struct RoomsStep: View {
                     ForEach(names, id: \.self) { name in
                         Text(name)
                             .font(.caption)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.textPrimary)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
-                            .background(Constants.accentColor.opacity(0.3), in: Capsule())
+                            .background(Color.manor.primary.opacity(0.3), in: Capsule())
                     }
                 }
                 .padding(.horizontal, 24)
@@ -388,31 +388,31 @@ struct RoomsStep: View {
         HStack {
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.textPrimary)
             Spacer()
             HStack(spacing: 16) {
                 Button { if value.wrappedValue > range.lowerBound { value.wrappedValue -= 1 } } label: {
                     Image(systemName: "minus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(value.wrappedValue > range.lowerBound ? Constants.accentColor : .gray)
+                        .foregroundStyle(value.wrappedValue > range.lowerBound ? Color.manor.primary : .gray)
                 }
                 .disabled(value.wrappedValue <= range.lowerBound)
 
                 Text("\(value.wrappedValue)")
                     .font(.title2.bold().monospacedDigit())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
                     .frame(width: 36)
 
                 Button { if value.wrappedValue < range.upperBound { value.wrappedValue += 1 } } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(value.wrappedValue < range.upperBound ? Constants.accentColor : .gray)
+                        .foregroundStyle(value.wrappedValue < range.upperBound ? Color.manor.primary : .gray)
                 }
                 .disabled(value.wrappedValue >= range.upperBound)
             }
         }
         .padding(14)
-        .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
@@ -433,27 +433,27 @@ struct CreateAccountStep: View {
 
                 Text("Create your account")
                     .font(.title.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
 
                 Text("Save your audit and sync across devices.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.6))
+                    .foregroundStyle(Color.manor.textSecondary)
 
                 VStack(spacing: 14) {
                     // Apple Sign In
                     if signedInWithApple {
                         HStack(spacing: 12) {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                                 .font(.title2)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Signed in with Apple")
                                     .font(.headline)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color.manor.textPrimary)
                                 if !userName.isEmpty {
                                     Text(userName)
                                         .font(.subheadline)
-                                        .foregroundStyle(.white.opacity(0.6))
+                                        .foregroundStyle(Color.manor.textSecondary)
                                 }
                             }
                             Spacer()
@@ -461,11 +461,11 @@ struct CreateAccountStep: View {
                         .padding(18)
                         .background(
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Constants.accentColor.opacity(0.15))
+                                .fill(Color.manor.primary.opacity(0.15))
                         )
                         .overlay(
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .stroke(Constants.accentColor, lineWidth: 2)
+                                .stroke(Color.manor.primary, lineWidth: 2)
                         )
                     } else {
                         OnboardingIconCard(
@@ -502,8 +502,8 @@ struct CreateAccountStep: View {
                                     .textFieldStyle(.plain)
                                     .textContentType(.name)
                                     .padding(12)
-                                    .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
-                                    .foregroundStyle(.white)
+                                    .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 10))
+                                    .foregroundStyle(Color.manor.textPrimary)
 
                                 TextField("Email", text: $userEmail)
                                     .textFieldStyle(.plain)
@@ -511,8 +511,8 @@ struct CreateAccountStep: View {
                                     .keyboardType(.emailAddress)
                                     .autocapitalization(.none)
                                     .padding(12)
-                                    .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
-                                    .foregroundStyle(.white)
+                                    .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 10))
+                                    .foregroundStyle(Color.manor.textPrimary)
                             }
                             .transition(.opacity.combined(with: .move(edge: .top)))
                         }
@@ -524,7 +524,7 @@ struct CreateAccountStep: View {
                     Button(action: onSkip) {
                         Text("Skip for now")
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.5))
+                            .foregroundStyle(Color.manor.textTertiary)
                     }
                 }
 
@@ -546,25 +546,25 @@ struct NotificationsStep: View {
 
             Text("Stay on top of your\nhome's energy")
                 .font(.title.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.textPrimary)
                 .multilineTextAlignment(.center)
 
             VStack(spacing: 12) {
                 notificationPreview(
                     icon: "bolt.fill",
-                    color: .yellow,
+                    color: Color.manor.warning,
                     title: "Energy Spike Alert",
                     subtitle: "Your HVAC used 40% more energy today"
                 )
                 notificationPreview(
                     icon: "calendar.badge.clock",
-                    color: Constants.accentColor,
+                    color: Color.manor.primary,
                     title: "Monthly Audit Reminder",
                     subtitle: "Time to review your energy profile"
                 )
                 notificationPreview(
                     icon: "lightbulb.fill",
-                    color: .orange,
+                    color: Color.manor.accent,
                     title: "Savings Tip",
                     subtitle: "Switch to LED — save $120/year"
                 )
@@ -573,7 +573,7 @@ struct NotificationsStep: View {
 
             Text("We'll only send useful updates, never spam.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.4))
+                .foregroundStyle(Color.manor.textTertiary)
 
             Spacer()
             Spacer()
@@ -596,18 +596,18 @@ struct NotificationsStep: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.textPrimary)
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(Color.manor.textTertiary)
             }
             Spacer()
         }
         .padding(14)
-        .background(Color.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
+        .background(Color.manor.surfaceContainer, in: RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                .stroke(Color.manor.outlineVariant, lineWidth: 1)
         )
     }
 }

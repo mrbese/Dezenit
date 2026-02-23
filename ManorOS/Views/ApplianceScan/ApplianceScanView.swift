@@ -22,26 +22,26 @@ struct ApplianceScanView: View {
                 // Guide text
                 Text("Point camera at an appliance")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
+                    .background(Color.manor.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
                     .padding(.top, 60)
 
                 Spacer()
 
                 if isClassifying {
                     ProgressView("Identifying...")
-                        .tint(.white)
-                        .foregroundStyle(.white)
+                        .tint(Color.manor.onPrimary)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .padding()
-                        .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.manor.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
                 } else if !classificationResults.isEmpty, let image = capturedImage {
                     // Results chips
                     VStack(spacing: 12) {
                         Text("What is this?")
                             .font(.headline)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
 
                         ForEach(classificationResults) { result in
                             Button {
@@ -64,9 +64,9 @@ struct ApplianceScanView: View {
                                     Image(systemName: "chevron.right")
                                         .font(.caption)
                                 }
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.manor.onPrimary)
                                 .padding(14)
-                                .background(.white.opacity(0.2), in: RoundedRectangle(cornerRadius: 12))
+                                .background(Color.manor.surfaceContainerHigh, in: RoundedRectangle(cornerRadius: 12))
                             }
                             .buttonStyle(.plain)
                         }
@@ -91,7 +91,7 @@ struct ApplianceScanView: View {
                     HStack {
                         Button(action: { dismiss() }) {
                             Text("Cancel")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.manor.onPrimary)
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 12)
                         }
@@ -100,7 +100,7 @@ struct ApplianceScanView: View {
 
                         Button(action: captureAndClassify) {
                             Circle()
-                                .fill(.white)
+                                .fill(Color.manor.onPrimary)
                                 .frame(width: 72, height: 72)
                                 .overlay(
                                     Circle()

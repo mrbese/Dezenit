@@ -194,7 +194,7 @@ struct SettingsView: View {
     private var notificationsSection: some View {
         Section("Notifications") {
             Toggle("Enable Notifications", isOn: $notificationsEnabled)
-                .tint(Constants.accentColor)
+                .tint(Color.manor.primary)
         }
     }
 

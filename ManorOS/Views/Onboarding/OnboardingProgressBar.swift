@@ -11,7 +11,7 @@ struct OnboardingProgressBar: View {
                 Button(action: onBack) {
                     Image(systemName: "chevron.left")
                         .font(.body.weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.textPrimary)
                         .frame(width: 32, height: 32)
                 }
             } else {
@@ -21,7 +21,7 @@ struct OnboardingProgressBar: View {
             HStack(spacing: 4) {
                 ForEach(0..<totalSteps, id: \.self) { i in
                     Capsule()
-                        .fill(i <= currentStep ? Constants.accentColor : Color.white.opacity(0.15))
+                        .fill(i <= currentStep ? Color.manor.primary : Color.manor.surfaceContainerHigh)
                         .frame(height: 4)
                 }
             }

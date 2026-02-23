@@ -42,7 +42,7 @@ struct EquipmentDetailsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") { saveEquipment() }
                         .fontWeight(.semibold)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
             }
             .toolbar {
@@ -108,7 +108,7 @@ struct EquipmentDetailsView: View {
                     } else if let ocr = ocrResult, ocr.manufacturer != nil || ocr.efficiencyValue != nil {
                         Label("Label data detected and pre-filled below", systemImage: "checkmark.circle.fill")
                             .font(.caption)
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.manor.success)
                     }
 
                     Button("Retake Photo") {
@@ -119,7 +119,7 @@ struct EquipmentDetailsView: View {
             } else {
                 Button(action: { showingCamera = true }) {
                     Label("Photograph Equipment Label", systemImage: "camera.fill")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
 
                 Text("Optional. Take a photo of the rating plate or EnergyGuide label for automatic data extraction.")

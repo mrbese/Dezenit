@@ -1,13 +1,6 @@
-import SwiftUI
-import UIKit
+import Foundation
 
 enum Constants {
-    static let accentColor = Color(red: 0.102, green: 0.478, blue: 0.298) // #1A7A4C emerald green
-    static let secondaryColor = Color(UIColor { traits in
-        traits.userInterfaceStyle == .dark
-            ? UIColor(red: 0.831, green: 0.831, blue: 0.847, alpha: 1) // #D4D4D8
-            : UIColor(red: 0.102, green: 0.102, blue: 0.102, alpha: 1) // #1A1A1A
-    })
     static let safetyFactor: Double = 1.10
     static let btuPerTon: Double = 12_000
 
@@ -55,21 +48,6 @@ enum Constants {
         static let cfl: [Double] = [9, 13, 18, 23, 26]
         static let incandescent: [Double] = [40, 60, 75, 100, 150]
     }
-
-    // MARK: - Semantic Colors
-
-    static func gradeColor(_ grade: EfficiencyGrade) -> Color {
-        switch grade {
-        case .a: return .green
-        case .b: return .blue
-        case .c: return .yellow
-        case .d: return .orange
-        case .f: return .red
-        }
-    }
-
-    static let statusSuccess = Color.green
-    static let statusWarning = Color.orange
 
     /// Phantom load (standby) values for common device categories
     enum PhantomLoads {

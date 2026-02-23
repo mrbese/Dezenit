@@ -55,7 +55,7 @@ struct OnboardingView: View {
 
             bottomButton
         }
-        .background(Color.black.ignoresSafeArea())
+        .background(Color.manor.onboardingBackground.ignoresSafeArea())
         .sensoryFeedback(.success, trigger: didFinish)
     }
 
@@ -131,11 +131,11 @@ struct OnboardingView: View {
         } label: {
             Text(buttonTitle)
                 .font(.headline)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(
-                    (buttonDisabled ? Color.gray : Constants.accentColor),
+                    (buttonDisabled ? Color.manor.textDisabled : Color.manor.primary),
                     in: RoundedRectangle(cornerRadius: 14)
                 )
         }

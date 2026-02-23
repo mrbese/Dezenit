@@ -17,7 +17,7 @@ struct ReportTabView: View {
             Spacer()
             Image(systemName: "doc.text.fill")
                 .font(.system(size: 56))
-                .foregroundStyle(Constants.accentColor.opacity(0.4))
+                .foregroundStyle(Color.manor.primary.opacity(0.4))
             VStack(spacing: 8) {
                 Text("No Report Yet")
                     .font(.title2.bold())

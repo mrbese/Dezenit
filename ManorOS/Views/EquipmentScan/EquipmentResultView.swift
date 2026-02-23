@@ -51,11 +51,11 @@ struct EquipmentResultView: View {
         VStack(spacing: 12) {
             Image(systemName: equipment.typeEnum.icon)
                 .font(.system(size: 40))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             Text(equipment.typeEnum.rawValue)
                 .font(.title2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             if let mfr = equipment.manufacturer {
                 Text(mfr)
@@ -67,7 +67,7 @@ struct EquipmentResultView: View {
                 VStack(spacing: 2) {
                     Text(String(format: "%.1f", equipment.estimatedEfficiency))
                         .font(.title.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Current \(equipment.typeEnum.efficiencyUnit)")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -75,7 +75,7 @@ struct EquipmentResultView: View {
                 VStack(spacing: 2) {
                     Text(equipment.ageRangeEnum.shortLabel)
                         .font(.title3.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Age")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -84,7 +84,7 @@ struct EquipmentResultView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity)
-        .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 20))
     }
 
     // MARK: - Comparison
@@ -126,11 +126,11 @@ struct EquipmentResultView: View {
         HStack {
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(highlight ? .green : .primary)
+                .foregroundStyle(highlight ? Color.manor.success : .primary)
             Spacer()
             Text("\(String(format: "%.1f", value)) \(unit)")
                 .font(.subheadline.monospacedDigit().bold())
-                .foregroundStyle(highlight ? .green : .primary)
+                .foregroundStyle(highlight ? Color.manor.success : .primary)
         }
     }
 
@@ -173,7 +173,7 @@ struct EquipmentResultView: View {
                     Text("Your current equipment meets this tier")
                         .font(.caption)
                 }
-                .foregroundStyle(.green)
+                .foregroundStyle(Color.manor.success)
             }
 
             // Cost range
@@ -195,7 +195,7 @@ struct EquipmentResultView: View {
                     Spacer()
                     Text("$\(Int(rec.annualSavings))/yr")
                         .font(.title3.bold())
-                        .foregroundStyle(.green)
+                        .foregroundStyle(Color.manor.success)
                 }
 
                 // Payback
@@ -207,7 +207,7 @@ struct EquipmentResultView: View {
                         Spacer()
                         Text(String(format: "%.1f years", pb))
                             .font(.caption.bold())
-                            .foregroundStyle(pb < 3 ? Constants.statusSuccess : pb < 7 ? Constants.statusWarning : .secondary)
+                            .foregroundStyle(pb < 3 ? Color.manor.success : pb < 7 ? Color.manor.warning : .secondary)
                     }
                 }
             }
@@ -217,15 +217,15 @@ struct EquipmentResultView: View {
                 HStack {
                     Image(systemName: "dollarsign.circle.fill")
                         .font(.caption)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.manor.info)
                     Text("Tax Credit: $\(Int(rec.taxCreditAmount))")
                         .font(.caption.bold())
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.manor.info)
                     Spacer()
                     if let epb = rec.effectivePaybackYears, let pb = rec.paybackYears, epb < pb {
                         Text("Effective payback: \(String(format: "%.1f yr", epb))")
                             .font(.caption)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(Color.manor.info)
                     }
                 }
                 .padding(8)
@@ -242,7 +242,7 @@ struct EquipmentResultView: View {
                 } label: {
                     Text("Technology Details")
                         .font(.caption)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
             }
         }
@@ -254,23 +254,23 @@ struct EquipmentResultView: View {
     private func tierBadge(_ tier: UpgradeTier) -> some View {
         let (label, color): (String, Color) = {
             switch tier {
-            case .good: return ("Good", .blue)
-            case .better: return ("Better", .orange)
-            case .best: return ("Best", .green)
+            case .good: return ("Good", Color.manor.info)
+            case .better: return ("Better", Color.manor.accent)
+            case .best: return ("Best", Color.manor.success)
             }
         }()
 
         return Text(label)
             .font(.caption2.bold())
-            .foregroundStyle(.white)
+            .foregroundStyle(Color.manor.onPrimary)
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
             .background(color, in: Capsule())
     }
 
     private func barColor(ratio: Double) -> Color {
-        if ratio >= 0.7 { return Constants.statusSuccess }
-        if ratio >= 0.4 { return Constants.statusWarning }
+        if ratio >= 0.7 { return Color.manor.success }
+        if ratio >= 0.4 { return Color.manor.warning }
         return .red
     }
 }

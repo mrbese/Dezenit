@@ -49,7 +49,7 @@ struct ApplianceDetailsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") { saveAppliance() }
                         .fontWeight(.semibold)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
             }
             .toolbar {
@@ -121,11 +121,11 @@ struct ApplianceDetailsView: View {
                                 .frame(width: 48, height: 48)
                                 .background(
                                     quantity == count
-                                        ? Constants.accentColor
+                                        ? Color.manor.primary
                                         : Color(.secondarySystemBackground),
                                     in: RoundedRectangle(cornerRadius: 10)
                                 )
-                                .foregroundStyle(quantity == count ? .white : .primary)
+                                .foregroundStyle(quantity == count ? Color.manor.onPrimary : .primary)
                         }
                         .buttonStyle(.plain)
                     }
@@ -221,7 +221,7 @@ struct ApplianceDetailsView: View {
                 Spacer()
                 Text("$\(Int(annualCost))/yr")
                     .font(.subheadline.bold().monospacedDigit())
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
             }
 
             if category.isPhantomLoadRelevant {
@@ -230,7 +230,7 @@ struct ApplianceDetailsView: View {
                     Spacer()
                     Text("\(Int(category.phantomWatts))W when off")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.manor.warning)
                 }
             }
         }

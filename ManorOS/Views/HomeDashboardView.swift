@@ -155,7 +155,7 @@ struct HomeDashboardView: View {
                     HStack(spacing: 12) {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.title2)
-                            .foregroundStyle(Constants.accentColor)
+                            .foregroundStyle(Color.manor.primary)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Audit Complete")
                                 .font(.subheadline.bold())
@@ -166,10 +166,10 @@ struct HomeDashboardView: View {
                         Spacer()
                         Text("\(Int(audit.progressPercentage))%")
                             .font(.title3.bold().monospacedDigit())
-                            .foregroundStyle(Constants.accentColor)
+                            .foregroundStyle(Color.manor.primary)
                     }
                     .padding(14)
-                    .background(Constants.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                    .background(Color.manor.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
                 } else {
                     // In-progress audit
                     Button { showingAuditFlow = true } label: {
@@ -177,11 +177,11 @@ struct HomeDashboardView: View {
                             // Mini progress ring
                             ZStack {
                                 Circle()
-                                    .stroke(Color.gray.opacity(0.2), lineWidth: 3)
+                                    .stroke(Color.manor.outlineVariant, lineWidth: 3)
                                     .frame(width: 36, height: 36)
                                 Circle()
                                     .trim(from: 0, to: audit.progressPercentage / 100)
-                                    .stroke(Constants.accentColor, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                                    .stroke(Color.manor.primary, style: StrokeStyle(lineWidth: 3, lineCap: .round))
                                     .frame(width: 36, height: 36)
                                     .rotationEffect(.degrees(-90))
                                 Text("\(Int(audit.progressPercentage))%")
@@ -200,7 +200,7 @@ struct HomeDashboardView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .padding(14)
-                        .background(Constants.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                        .background(Color.manor.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
                     }
                     .buttonStyle(.plain)
                 }
@@ -210,7 +210,7 @@ struct HomeDashboardView: View {
                     HStack(spacing: 12) {
                         Image(systemName: "checklist")
                             .font(.title2)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Start Full Audit")
                                 .font(.subheadline.bold())
@@ -223,9 +223,9 @@ struct HomeDashboardView: View {
                             .font(.caption)
                             .opacity(0.7)
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(14)
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
                 }
                 .buttonStyle(.plain)
             }
@@ -242,17 +242,17 @@ struct HomeDashboardView: View {
                         let grade = GradingEngine.grade(for: home.equipment)
                         Text(grade.rawValue)
                             .font(.system(size: 48, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
                         Text("Efficiency")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.8))
+                            .foregroundStyle(Color.manor.onPrimary.opacity(0.8))
                     } else {
                         Text("--")
                             .font(.system(size: 48, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.5))
+                            .foregroundStyle(Color.manor.onPrimary.opacity(0.5))
                         Text("No Data")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(Color.manor.onPrimary.opacity(0.6))
                     }
                 }
 
@@ -271,14 +271,14 @@ struct HomeDashboardView: View {
                     Label(home.climateZoneEnum.rawValue, systemImage: "thermometer")
                 }
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.9))
+                .foregroundStyle(Color.manor.onPrimary.opacity(0.9))
 
                 Spacer()
             }
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 20))
     }
 
     // MARK: - Rooms
@@ -300,7 +300,7 @@ struct HomeDashboardView: View {
                     }
                 } label: {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
                 .accessibilityLabel("Add room")
             }
@@ -328,11 +328,11 @@ struct HomeDashboardView: View {
                                 Spacer()
                                 Text("\(Int(room.calculatedBTU).formatted()) BTU")
                                     .font(.caption.monospacedDigit())
-                                    .foregroundStyle(Constants.accentColor)
+                                    .foregroundStyle(Color.manor.primary)
                             }
                             .padding(12)
                             .background(.background, in: RoundedRectangle(cornerRadius: 10))
-                            .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                            .shadow(color: Color.manor.background.opacity(0.08), radius: 4, y: 1)
                         }
                         .buttonStyle(.plain)
                         .contextMenu {
@@ -358,7 +358,7 @@ struct HomeDashboardView: View {
                                         Text("Tap to scan or add details")
                                     }
                                     .font(.caption)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(Color.manor.warning)
                                 }
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -367,7 +367,7 @@ struct HomeDashboardView: View {
                             }
                             .padding(12)
                             .background(.background, in: RoundedRectangle(cornerRadius: 10))
-                            .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                            .shadow(color: Color.manor.background.opacity(0.08), radius: 4, y: 1)
                         }
                         .buttonStyle(.plain)
                         .contextMenu {
@@ -394,7 +394,7 @@ struct HomeDashboardView: View {
                 Spacer()
                 Button(action: { showingEquipmentScan = true }) {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
                 .accessibilityLabel("Add equipment")
             }
@@ -412,7 +412,7 @@ struct HomeDashboardView: View {
                         HStack(spacing: 12) {
                             Image(systemName: item.typeEnum.icon)
                                 .font(.title3)
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                                 .frame(width: 28)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(item.typeEnum.rawValue)
@@ -429,11 +429,11 @@ struct HomeDashboardView: View {
                             Spacer()
                             Text("\(String(format: "%.1f", item.estimatedEfficiency)) \(item.typeEnum.efficiencyUnit)")
                                 .font(.caption.monospacedDigit())
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                         }
                         .padding(12)
                         .background(.background, in: RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                        .shadow(color: Color.manor.background.opacity(0.08), radius: 4, y: 1)
                     }
                     .buttonStyle(.plain)
                     .contextMenu {
@@ -469,7 +469,7 @@ struct HomeDashboardView: View {
                     }
                 } label: {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
                 .accessibilityLabel("Add appliance")
             }
@@ -494,7 +494,7 @@ struct HomeDashboardView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("$\(Int(totalCost))/yr")
                             .font(.subheadline.bold().monospacedDigit())
-                            .foregroundStyle(Constants.accentColor)
+                            .foregroundStyle(Color.manor.primary)
                         Text("Total cost")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
@@ -503,7 +503,7 @@ struct HomeDashboardView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("\(Int(home.totalPhantomLoadWatts))W")
                                 .font(.subheadline.bold().monospacedDigit())
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(Color.manor.warning)
                             Text("Standby")
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
@@ -512,7 +512,7 @@ struct HomeDashboardView: View {
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Constants.accentColor.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
+                .background(Color.manor.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
 
                 ForEach(home.appliances) { appliance in
                     NavigationLink {
@@ -521,7 +521,7 @@ struct HomeDashboardView: View {
                         HStack(spacing: 12) {
                             Image(systemName: appliance.categoryEnum.icon)
                                 .font(.title3)
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                                 .frame(width: 28)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(appliance.name)
@@ -540,11 +540,11 @@ struct HomeDashboardView: View {
                             Spacer()
                             Text("$\(Int(appliance.annualCost()))/yr")
                                 .font(.caption.monospacedDigit())
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                         }
                         .padding(12)
                         .background(.background, in: RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                        .shadow(color: Color.manor.background.opacity(0.08), radius: 4, y: 1)
                     }
                     .buttonStyle(.plain)
                     .contextMenu {
@@ -577,7 +577,7 @@ struct HomeDashboardView: View {
                     }
                 } label: {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
                 .accessibilityLabel("Add energy bill")
             }
@@ -594,7 +594,7 @@ struct HomeDashboardView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(String(format: "$%.3f/kWh", avgRate))
                             .font(.subheadline.bold().monospacedDigit())
-                            .foregroundStyle(Constants.accentColor)
+                            .foregroundStyle(Color.manor.primary)
                         Text("Avg rate")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
@@ -618,7 +618,7 @@ struct HomeDashboardView: View {
                 }
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Constants.accentColor.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
+                .background(Color.manor.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 10))
 
                 ForEach(home.energyBills) { bill in
                     NavigationLink {
@@ -627,7 +627,7 @@ struct HomeDashboardView: View {
                         HStack(spacing: 12) {
                             Image(systemName: "doc.text")
                                 .font(.title3)
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                                 .frame(width: 28)
                             VStack(alignment: .leading, spacing: 2) {
                                 if let name = bill.utilityName {
@@ -647,7 +647,7 @@ struct HomeDashboardView: View {
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(Int(bill.totalKWh)) kWh")
                                     .font(.caption.monospacedDigit())
-                                    .foregroundStyle(Constants.accentColor)
+                                    .foregroundStyle(Color.manor.primary)
                                 Text(String(format: "$%.2f", bill.totalCost))
                                     .font(.caption.monospacedDigit())
                                     .foregroundStyle(.secondary)
@@ -655,7 +655,7 @@ struct HomeDashboardView: View {
                         }
                         .padding(12)
                         .background(.background, in: RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                        .shadow(color: Color.manor.background.opacity(0.08), radius: 4, y: 1)
                     }
                     .buttonStyle(.plain)
                     .contextMenu {
@@ -691,9 +691,9 @@ struct HomeDashboardView: View {
                             .font(.caption)
                             .opacity(0.7)
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding()
-                    .background(Constants.accentColor.opacity(0.85), in: RoundedRectangle(cornerRadius: 14))
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
                 }
             }
         }

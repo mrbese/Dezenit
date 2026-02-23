@@ -66,7 +66,7 @@ struct ScanView: View {
             Spacer()
             Image(systemName: "camera.viewfinder")
                 .font(.system(size: 72))
-                .foregroundStyle(Constants.accentColor)
+                .foregroundStyle(Color.manor.primary)
             VStack(spacing: 8) {
                 Text("Ready to Scan")
                     .font(.title2.bold())
@@ -82,8 +82,8 @@ struct ScanView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.manor.onPrimary)
             }
             .padding(.horizontal, 32)
             Spacer()
@@ -100,15 +100,15 @@ struct ScanView: View {
             VStack(spacing: 16) {
                 HStack {
                     Circle()
-                        .fill(.red)
+                        .fill(Color.manor.error)
                         .frame(width: 10, height: 10)
                     Text("Scanning…")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
-                .background(.black.opacity(0.5), in: Capsule())
+                .background(Color.manor.background.opacity(0.5), in: Capsule())
                 .accessibilityLabel("Scanning in progress")
 
                 Button(action: { service.stopSession() }) {
@@ -116,8 +116,8 @@ struct ScanView: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
-                        .foregroundStyle(.white)
+                        .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
+                        .foregroundStyle(Color.manor.onPrimary)
                 }
                 .padding(.horizontal, 32)
                 .padding(.bottom, 32)
@@ -142,7 +142,7 @@ struct ScanView: View {
             VStack(spacing: 16) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 56))
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
 
                 Text("Scan Complete")
                     .font(.title2.bold())
@@ -153,7 +153,7 @@ struct ScanView: View {
                         .foregroundStyle(.secondary)
                     Text("\(Int(sqFt)) sq ft")
                         .font(.system(size: 48, weight: .bold, design: .rounded))
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
 
                 if !windows.isEmpty {
@@ -178,14 +178,14 @@ struct ScanView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.manor.onPrimary)
             }
             .padding(.horizontal, 32)
 
             Button(action: { service.reset() }) {
                 Text("Scan Again")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
             }
 
             Spacer()
@@ -196,7 +196,7 @@ struct ScanView: View {
         VStack(spacing: 20) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 48))
-                .foregroundStyle(.orange)
+                .foregroundStyle(Color.manor.warning)
             Text("Scan Failed")
                 .font(.title3.bold())
             Text(error.localizedDescription)
@@ -209,8 +209,8 @@ struct ScanView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.manor.onPrimary)
             }
             .padding(.horizontal, 32)
         }
@@ -234,8 +234,8 @@ struct ScanView: View {
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(Color.manor.onPrimary)
             }
             .padding(.horizontal, 32)
         }

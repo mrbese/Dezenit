@@ -23,20 +23,20 @@ struct LightingCloseupView: View {
                 // Guide
                 Text("Hold close to the bulb label")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
+                    .background(Color.manor.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
                     .padding(.top, 60)
 
                 Spacer()
 
                 if isProcessing {
                     ProgressView("Reading label...")
-                        .tint(.white)
-                        .foregroundStyle(.white)
+                        .tint(Color.manor.onPrimary)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .padding()
-                        .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.manor.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
                 } else if let result = ocrResult, let image = capturedImage {
                     ocrResultCard(result: result, image: image)
                 }
@@ -48,7 +48,7 @@ struct LightingCloseupView: View {
                     HStack {
                         Button(action: { dismiss() }) {
                             Text("Cancel")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.manor.onPrimary)
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 12)
                         }
@@ -57,7 +57,7 @@ struct LightingCloseupView: View {
 
                         Button(action: captureAndOCR) {
                             Circle()
-                                .fill(.white)
+                                .fill(Color.manor.onPrimary)
                                 .frame(width: 72, height: 72)
                                 .overlay(
                                     Circle()
@@ -104,7 +104,7 @@ struct LightingCloseupView: View {
         VStack(spacing: 12) {
             Text("Label Data")
                 .font(.headline)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             if let wattage = result.wattage {
                 HStack {
@@ -113,7 +113,7 @@ struct LightingCloseupView: View {
                     Spacer()
                     Text("\(Int(wattage))W")
                         .font(.title3.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                 }
             }
 
@@ -124,7 +124,7 @@ struct LightingCloseupView: View {
                     Spacer()
                     Text("\(lumens) lm")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                 }
             }
 
@@ -135,7 +135,7 @@ struct LightingCloseupView: View {
                     Spacer()
                     Text("\(temp)K")
                         .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                 }
             }
 
@@ -146,7 +146,7 @@ struct LightingCloseupView: View {
                     Spacer()
                     Text(bulbType.rawValue)
                         .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                 }
             }
 
@@ -156,10 +156,10 @@ struct LightingCloseupView: View {
                     dismiss()
                 }
                 .font(.subheadline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
-                .background(Constants.accentColor, in: Capsule())
+                .background(Color.manor.primary, in: Capsule())
 
                 Button("Retake") {
                     capturedImage = nil

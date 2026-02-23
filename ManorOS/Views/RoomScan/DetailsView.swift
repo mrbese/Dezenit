@@ -77,7 +77,7 @@ struct DetailsView: View {
                         saveAndCalculate()
                     }
                     .fontWeight(.semibold)
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                     .disabled(!isFormValid)
                 }
             }
@@ -127,7 +127,7 @@ struct DetailsView: View {
             if scannedSqFt != nil {
                 HStack {
                     Image(systemName: "camera.viewfinder")
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                     Text("Detected by LiDAR scan")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -155,7 +155,7 @@ struct DetailsView: View {
 
             Button(action: { windows.append(WindowInfo()) }) {
                 Label("Add Window", systemImage: "plus.circle.fill")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
             }
         } header: {
             Text("Windows (\(windows.count))")
@@ -164,7 +164,7 @@ struct DetailsView: View {
                 if windowsFromScan && !windows.isEmpty {
                     Label("Count, size, and direction detected by LiDAR. Pane type, frame, and condition need manual assessment.", systemImage: "camera.viewfinder")
                         .font(.caption)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
                 if !windows.isEmpty {
                     Text("Tap the info button on each window to assess pane type, frame, and condition.")
@@ -194,7 +194,7 @@ struct DetailsView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "location.fill")
                         .font(.caption)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                     Text("Based on your location (\(city))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -226,7 +226,7 @@ struct DetailsView: View {
             if !insulation.isSelected {
                 Text("How would you rate your insulation? Check your attic or ask your home inspector.")
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.manor.warning)
             }
         } header: {
             Text("Environment")
@@ -301,7 +301,7 @@ private struct WindowRowView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "window.casement")
-                .foregroundStyle(Constants.accentColor)
+                .foregroundStyle(Color.manor.primary)
                 .frame(width: 24)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -344,7 +344,7 @@ private struct WindowRowView: View {
                             .font(.caption2)
                     }
                     .font(.caption2)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.manor.warning)
                 }
             }
 
@@ -360,7 +360,7 @@ private struct WindowRowView: View {
                 Button(action: onAssess) {
                     Image(systemName: "info.circle")
                         .font(.body)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }

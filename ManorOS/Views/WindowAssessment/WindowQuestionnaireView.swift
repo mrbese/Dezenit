@@ -42,7 +42,7 @@ struct WindowQuestionnaireView: View {
                     if step == totalSteps - 1 {
                         Button("Done") { dismiss() }
                             .fontWeight(.semibold)
-                            .foregroundStyle(Constants.accentColor)
+                            .foregroundStyle(Color.manor.primary)
                     }
                 }
             }
@@ -55,7 +55,7 @@ struct WindowQuestionnaireView: View {
         HStack(spacing: 4) {
             ForEach(0..<totalSteps, id: \.self) { i in
                 Capsule()
-                    .fill(i <= step ? Constants.accentColor : Color.gray.opacity(0.3))
+                    .fill(i <= step ? Color.manor.primary : Color.gray.opacity(0.3))
                     .frame(height: 4)
             }
         }
@@ -189,11 +189,11 @@ struct WindowQuestionnaireView: View {
                                 .padding(.vertical, 12)
                                 .background(
                                     window.direction == dir
-                                        ? Constants.accentColor
+                                        ? Color.manor.primary
                                         : Color.gray.opacity(0.12),
                                     in: RoundedRectangle(cornerRadius: 10)
                                 )
-                                .foregroundStyle(window.direction == dir ? .white : .primary)
+                                .foregroundStyle(window.direction == dir ? Color.manor.onPrimary : .primary)
                             }
                             .buttonStyle(.plain)
                         }
@@ -222,13 +222,13 @@ struct WindowQuestionnaireView: View {
                                 Spacer()
                                 if window.size == size {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(Constants.accentColor)
+                                        .foregroundStyle(Color.manor.primary)
                                 }
                             }
                             .padding(12)
                             .background(
                                 window.size == size
-                                    ? Constants.accentColor.opacity(0.1)
+                                    ? Color.manor.primary.opacity(0.1)
                                     : Color.gray.opacity(0.06),
                                 in: RoundedRectangle(cornerRadius: 10)
                             )
@@ -258,7 +258,7 @@ struct WindowQuestionnaireView: View {
         VStack(spacing: 8) {
             HStack {
                 Image(systemName: "thermometer.medium")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Effective U-Factor")
                     .font(.subheadline.bold())
                 Spacer()
@@ -276,8 +276,8 @@ struct WindowQuestionnaireView: View {
 
     private var uFactorColor: Color {
         let u = window.effectiveUFactor
-        if u < 0.35 { return Constants.statusSuccess }
-        if u < 0.60 { return Constants.statusWarning }
+        if u < 0.35 { return Color.manor.success }
+        if u < 0.60 { return Color.manor.warning }
         return .red
     }
 
@@ -285,17 +285,17 @@ struct WindowQuestionnaireView: View {
         VStack(spacing: 8) {
             HStack {
                 Image(systemName: "flame")
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
                 Text("Estimated Heat Gain")
                     .font(.subheadline.bold())
                 Spacer()
                 Text("+\(Int(window.heatGainBTU).formatted()) BTU")
                     .font(.title3.bold().monospacedDigit())
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
             }
         }
         .padding(14)
-        .background(Constants.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .background(Color.manor.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
     }
 
     // MARK: - Navigation Buttons
@@ -327,10 +327,10 @@ struct WindowQuestionnaireView: View {
                         Text("Next")
                         Image(systemName: "chevron.right")
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
-                    .background(Constants.accentColor, in: Capsule())
+                    .background(Color.manor.primary, in: Capsule())
                 }
                 .buttonStyle(.plain)
             }
@@ -358,10 +358,10 @@ struct WindowQuestionnaireView: View {
             HStack(spacing: 14) {
                 Image(systemName: icon)
                     .font(.title2)
-                    .foregroundStyle(selected ? .white : Constants.accentColor)
+                    .foregroundStyle(selected ? Color.manor.onPrimary : Color.manor.primary)
                     .frame(width: 36, height: 36)
                     .background(
-                        selected ? Constants.accentColor : Constants.accentColor.opacity(0.12),
+                        selected ? Color.manor.primary : Color.manor.primary.opacity(0.12),
                         in: RoundedRectangle(cornerRadius: 8)
                     )
 
@@ -380,17 +380,17 @@ struct WindowQuestionnaireView: View {
                 if selected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title3)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
             }
             .padding(14)
             .background(
-                selected ? Constants.accentColor.opacity(0.08) : Color(.systemBackground),
+                selected ? Color.manor.primary.opacity(0.08) : Color(.systemBackground),
                 in: RoundedRectangle(cornerRadius: 14)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .stroke(selected ? Constants.accentColor : Color.gray.opacity(0.2), lineWidth: selected ? 2 : 1)
+                    .stroke(selected ? Color.manor.primary : Color.gray.opacity(0.2), lineWidth: selected ? 2 : 1)
             )
         }
         .buttonStyle(.plain)

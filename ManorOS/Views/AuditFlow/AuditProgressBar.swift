@@ -14,7 +14,7 @@ struct AuditProgressBar: View {
                             if index > 0 {
                                 Rectangle()
                                     .fill(auditProgress.isStepComplete(step) || step == currentStep
-                                          ? Constants.accentColor
+                                          ? Color.manor.primary
                                           : Color.gray.opacity(0.3))
                                     .frame(width: 12, height: 2)
                             }
@@ -26,7 +26,7 @@ struct AuditProgressBar: View {
                             if index < AuditStep.allCases.count - 1 {
                                 Rectangle()
                                     .fill(auditProgress.isStepComplete(step)
-                                          ? Constants.accentColor
+                                          ? Color.manor.primary
                                           : Color.gray.opacity(0.3))
                                     .frame(width: 12, height: 2)
                             }
@@ -39,7 +39,7 @@ struct AuditProgressBar: View {
             // Current step label
             Text(currentStep.rawValue)
                 .font(.caption.bold())
-                .foregroundStyle(Constants.accentColor)
+                .foregroundStyle(Color.manor.primary)
         }
         .padding(.vertical, 8)
     }
@@ -50,21 +50,21 @@ struct AuditProgressBar: View {
 
         return ZStack {
             Circle()
-                .fill(isComplete ? Constants.accentColor : isCurrent ? Constants.accentColor : Color.clear)
+                .fill(isComplete ? Color.manor.primary : isCurrent ? Color.manor.primary : Color.clear)
                 .frame(width: 28, height: 28)
 
             Circle()
-                .stroke(isComplete || isCurrent ? Constants.accentColor : Color.gray.opacity(0.4), lineWidth: 2)
+                .stroke(isComplete || isCurrent ? Color.manor.primary : Color.gray.opacity(0.4), lineWidth: 2)
                 .frame(width: 28, height: 28)
 
             if isComplete {
                 Image(systemName: "checkmark")
                     .font(.caption2.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
             } else {
                 Text("\(index + 1)")
                     .font(.caption2.bold())
-                    .foregroundStyle(isCurrent ? .white : .secondary)
+                    .foregroundStyle(isCurrent ? Color.manor.onPrimary : .secondary)
             }
         }
     }

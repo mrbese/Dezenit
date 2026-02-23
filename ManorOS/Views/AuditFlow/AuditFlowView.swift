@@ -243,7 +243,7 @@ struct AuditFlowView: View {
                 }
                 .padding(16)
                 .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: 14))
-                .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                .shadow(color: Color.manor.background.opacity(0.04), radius: 4, y: 1)
             }
             .padding(20)
         }
@@ -268,7 +268,7 @@ struct AuditFlowView: View {
                     ForEach(completedRooms) { room in
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                             Text(room.name.isEmpty ? "Unnamed Room" : room.name)
                                 .font(.subheadline)
                             Spacer()
@@ -286,13 +286,13 @@ struct AuditFlowView: View {
                         VStack(spacing: 0) {
                             HStack {
                                 Image(systemName: "exclamationmark.circle.fill")
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(Color.manor.warning)
                                 Text(room.name.isEmpty ? "Unnamed Room" : room.name)
                                     .font(.subheadline)
                                 Spacer()
                                 Text("Needs details")
                                     .font(.caption)
-                                    .foregroundStyle(.orange)
+                                    .foregroundStyle(Color.manor.warning)
                             }
                             .padding(.horizontal, 12)
                             .padding(.top, 12)
@@ -310,8 +310,8 @@ struct AuditFlowView: View {
                                         .font(.caption.weight(.medium))
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 8)
-                                        .foregroundStyle(Constants.accentColor)
-                                        .background(Constants.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                                        .foregroundStyle(Color.manor.primary)
+                                        .background(Color.manor.primary.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
                                     }
                                     .buttonStyle(.plain)
                                 }
@@ -326,8 +326,8 @@ struct AuditFlowView: View {
                                     .font(.caption.weight(.medium))
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 8)
-                                    .foregroundStyle(Constants.accentColor)
-                                    .background(Constants.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+                                    .foregroundStyle(Color.manor.primary)
+                                    .background(Color.manor.primary.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -388,7 +388,7 @@ struct AuditFlowView: View {
                     ForEach(matching) { eq in
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                             Text(eq.typeEnum.rawValue)
                                 .font(.subheadline)
                             Spacer()
@@ -519,7 +519,7 @@ struct AuditFlowView: View {
                         } label: {
                             HStack {
                                 Image(systemName: room.windows.isEmpty ? "circle" : "checkmark.circle.fill")
-                                    .foregroundStyle(room.windows.isEmpty ? Color.secondary : Color.green)
+                                    .foregroundStyle(room.windows.isEmpty ? Color.secondary : Color.manor.success)
                                 Text(room.name.isEmpty ? "Unnamed Room" : room.name)
                                     .font(.subheadline)
                                 Spacer()
@@ -565,7 +565,7 @@ struct AuditFlowView: View {
                     ForEach(home.energyBills) { bill in
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                             Text(bill.utilityName ?? "Utility Bill")
                                 .font(.subheadline)
                             Spacer()
@@ -621,16 +621,16 @@ struct AuditFlowView: View {
                         .font(.caption)
                         .opacity(0.7)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
                 .padding()
-                .background(Constants.secondaryColor, in: RoundedRectangle(cornerRadius: 14))
+                .background(Color.manor.secondary, in: RoundedRectangle(cornerRadius: 14))
             }
 
             if let audit, audit.isComplete {
                 VStack(spacing: 8) {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.system(size: 48))
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                     Text("Audit Complete!")
                         .font(.title2.bold())
                     Text("All 10 steps finished.")
@@ -673,10 +673,10 @@ struct AuditFlowView: View {
                 } label: {
                     Text("Finish")
                         .fontWeight(.semibold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
-                        .background(Constants.accentColor, in: Capsule())
+                        .background(Color.manor.primary, in: Capsule())
                 }
                 .buttonStyle(.plain)
             } else {
@@ -698,10 +698,10 @@ struct AuditFlowView: View {
                             Text("Next")
                             Image(systemName: "chevron.right")
                         }
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .background(isCurrentStepSatisfied ? Constants.accentColor : Color.gray, in: Capsule())
+                        .background(isCurrentStepSatisfied ? Color.manor.primary : Color.gray, in: Capsule())
                     }
                     .buttonStyle(.plain)
                     .disabled(!isCurrentStepSatisfied)
@@ -787,7 +787,7 @@ struct AuditFlowView: View {
         VStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 36))
-                .foregroundStyle(Constants.accentColor)
+                .foregroundStyle(Color.manor.primary)
             Text(title)
                 .font(.title2.bold())
             Text(subtitle)
@@ -802,14 +802,14 @@ struct AuditFlowView: View {
     private func completedBadge(_ text: String) -> some View {
         HStack(spacing: 6) {
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(Constants.statusSuccess)
+                .foregroundStyle(Color.manor.success)
             Text(text)
                 .font(.subheadline.bold())
-                .foregroundStyle(Constants.statusSuccess)
+                .foregroundStyle(Color.manor.success)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .background(Constants.statusSuccess.opacity(0.1), in: Capsule())
+        .background(Color.manor.success.opacity(0.1), in: Capsule())
     }
 
     private func actionButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
@@ -821,8 +821,8 @@ struct AuditFlowView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .foregroundStyle(Constants.accentColor)
-            .background(Constants.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+            .foregroundStyle(Color.manor.primary)
+            .background(Color.manor.primary.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
     }
@@ -841,7 +841,7 @@ struct AuditFlowView: View {
     private func applianceRow(_ appliance: Appliance) -> some View {
         HStack(spacing: 12) {
             Image(systemName: appliance.categoryEnum.icon)
-                .foregroundStyle(Constants.accentColor)
+                .foregroundStyle(Color.manor.primary)
                 .frame(width: 24)
             Text(appliance.name)
                 .font(.subheadline)

@@ -25,20 +25,20 @@ struct BillUploadView: View {
                 // Guide
                 Text("Point at your utility bill")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
+                    .background(Color.manor.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
                     .padding(.top, 60)
 
                 Spacer()
 
                 if isProcessing {
                     ProgressView("Parsing bill...")
-                        .tint(.white)
-                        .foregroundStyle(.white)
+                        .tint(Color.manor.onPrimary)
+                        .foregroundStyle(Color.manor.onPrimary)
                         .padding()
-                        .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.manor.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 12))
                 } else if let result = parsedResult, let image = capturedImage {
                     parsedResultCard(result: result, image: image)
                 }
@@ -50,7 +50,7 @@ struct BillUploadView: View {
                     HStack {
                         Button(action: { dismiss() }) {
                             Text("Cancel")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.manor.onPrimary)
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 12)
                         }
@@ -59,7 +59,7 @@ struct BillUploadView: View {
 
                         Button(action: captureAndParse) {
                             Circle()
-                                .fill(.white)
+                                .fill(Color.manor.onPrimary)
                                 .frame(width: 72, height: 72)
                                 .overlay(
                                     Circle()
@@ -123,7 +123,7 @@ struct BillUploadView: View {
         VStack(spacing: 12) {
             Text("Bill Data")
                 .font(.headline)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             if let name = result.utilityName {
                 infoRow(label: "Utility", value: name)
@@ -161,10 +161,10 @@ struct BillUploadView: View {
                     dismiss()
                 }
                 .font(.subheadline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
-                .background(Constants.accentColor, in: Capsule())
+                .background(Color.manor.primary, in: Capsule())
 
                 Button("Retake") {
                     capturedImage = nil
@@ -177,7 +177,7 @@ struct BillUploadView: View {
         }
         .font(.subheadline)
         .padding(20)
-        .background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.manor.background.opacity(0.75), in: RoundedRectangle(cornerRadius: 20))
         .padding(.horizontal, 20)
     }
 
@@ -188,7 +188,7 @@ struct BillUploadView: View {
             Spacer()
             Text(value)
                 .font(.subheadline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
         }
     }
 

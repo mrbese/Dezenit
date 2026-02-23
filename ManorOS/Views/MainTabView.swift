@@ -77,7 +77,7 @@ struct MainTabView: View {
                 }
                 .tag(AppTab.settings)
             }
-            .tint(Constants.accentColor)
+            .tint(Color.manor.primary)
             .sheet(isPresented: $showingAddHome) {
                 AddHomeSheet { home in
                     modelContext.insert(home)
@@ -103,7 +103,7 @@ struct MainTabView: View {
                 VStack(spacing: 16) {
                     Image(systemName: "house.fill")
                         .font(.system(size: 64))
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
 
                     VStack(spacing: 8) {
                         Text("Manor OS")
@@ -129,9 +129,9 @@ struct MainTabView: View {
                             .font(.caption)
                             .opacity(0.7)
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding()
-                    .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 14))
+                    .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 14))
                 }
                 .padding(.horizontal, 32)
 

@@ -38,11 +38,11 @@ struct ApplianceResultView: View {
         VStack(spacing: 12) {
             Image(systemName: appliance.categoryEnum.icon)
                 .font(.system(size: 40))
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             Text(appliance.name)
                 .font(.title2.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.manor.onPrimary)
 
             Text(appliance.categoryEnum.categoryGroup)
                 .font(.subheadline)
@@ -52,7 +52,7 @@ struct ApplianceResultView: View {
                 VStack(spacing: 2) {
                     Text("\(Int(appliance.estimatedWattage))W")
                         .font(.title.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("Power")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -60,7 +60,7 @@ struct ApplianceResultView: View {
                 VStack(spacing: 2) {
                     Text(formatHours(appliance.hoursPerDay))
                         .font(.title.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.onPrimary)
                     Text("hrs/day")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.7))
@@ -69,7 +69,7 @@ struct ApplianceResultView: View {
                     VStack(spacing: 2) {
                         Text("x\(appliance.quantity)")
                             .font(.title.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
                         Text("Qty")
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.7))
@@ -79,7 +79,7 @@ struct ApplianceResultView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity)
-        .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 20))
     }
 
     // MARK: - Energy Breakdown
@@ -103,7 +103,7 @@ struct ApplianceResultView: View {
                 Spacer()
                 Text("$\(Int(appliance.annualCost()))/yr")
                     .font(.title3.bold().monospacedDigit())
-                    .foregroundStyle(Constants.accentColor)
+                    .foregroundStyle(Color.manor.primary)
             }
 
             // Monthly breakdown
@@ -141,7 +141,7 @@ struct ApplianceResultView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Image(systemName: "moon.zzz")
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.manor.warning)
                 Text("Phantom Load")
                     .font(.headline)
             }
@@ -153,7 +153,7 @@ struct ApplianceResultView: View {
                 Spacer()
                 Text("\(Int(cat.phantomWatts))W")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.manor.warning)
             }
 
             HStack {
@@ -163,7 +163,7 @@ struct ApplianceResultView: View {
                 let phantomCost = appliance.phantomAnnualKWh * Constants.defaultElectricityRate
                 Text("$\(String(format: "%.0f", phantomCost))/yr")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(Color.manor.warning)
             }
 
             Text("This device draws \(Int(cat.phantomWatts))W even when \"off.\" A smart power strip can eliminate 75% of this standby waste.")
@@ -184,7 +184,7 @@ struct ApplianceResultView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 8) {
                         Image(systemName: "lightbulb.max")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.manor.success)
                         Text("Savings Tip")
                             .font(.headline)
                     }
@@ -200,10 +200,10 @@ struct ApplianceResultView: View {
                     if let savings = tip.savings {
                         HStack {
                             Image(systemName: "arrow.down.circle.fill")
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                             Text(savings)
                                 .font(.caption.bold())
-                                .foregroundStyle(.green)
+                                .foregroundStyle(Color.manor.success)
                         }
                     }
                 }

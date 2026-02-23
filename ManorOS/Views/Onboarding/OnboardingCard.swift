@@ -12,11 +12,11 @@ struct OnboardingCard<Content: View>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(isSelected ? Constants.accentColor.opacity(0.15) : Color.white.opacity(0.06))
+                        .fill(isSelected ? Color.manor.primary.opacity(0.15) : Color.manor.surfaceContainer)
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(isSelected ? Constants.accentColor : Color.white.opacity(0.1), lineWidth: isSelected ? 2 : 1)
+                        .stroke(isSelected ? Color.manor.primary : Color.manor.outlineVariant, lineWidth: isSelected ? 2 : 1)
                 )
         }
         .buttonStyle(.plain)
@@ -35,21 +35,21 @@ struct OnboardingIconCard: View {
             HStack(spacing: 16) {
                 ZStack {
                     Circle()
-                        .fill(isSelected ? Constants.accentColor.opacity(0.2) : Color.white.opacity(0.08))
+                        .fill(isSelected ? Color.manor.primary.opacity(0.2) : Color.manor.surfaceContainerHigh)
                         .frame(width: 44, height: 44)
                     Image(systemName: icon)
                         .font(.title3)
-                        .foregroundStyle(isSelected ? Constants.accentColor : .white.opacity(0.7))
+                        .foregroundStyle(isSelected ? Color.manor.primary : Color.manor.textSecondary)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.manor.textPrimary)
                     if let subtitle {
                         Text(subtitle)
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.5))
+                            .foregroundStyle(Color.manor.textTertiary)
                     }
                 }
 
@@ -58,7 +58,7 @@ struct OnboardingIconCard: View {
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title3)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
             }
         }

@@ -15,14 +15,14 @@ struct BillSummaryView: View {
                     if let name = bill.utilityName {
                         Text(name)
                             .font(.title2.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.manor.onPrimary)
                     }
 
                     HStack(spacing: 24) {
                         VStack(spacing: 4) {
                             Text("\(Int(bill.totalKWh))")
                                 .font(.system(size: 36, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.manor.onPrimary)
                             Text("kWh")
                                 .font(.caption)
                                 .foregroundStyle(.white.opacity(0.8))
@@ -31,7 +31,7 @@ struct BillSummaryView: View {
                         VStack(spacing: 4) {
                             Text(String(format: "$%.2f", bill.totalCost))
                                 .font(.system(size: 36, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color.manor.onPrimary)
                             Text("Total")
                                 .font(.caption)
                                 .foregroundStyle(.white.opacity(0.8))
@@ -40,7 +40,7 @@ struct BillSummaryView: View {
                 }
                 .padding(20)
                 .frame(maxWidth: .infinity)
-                .background(Constants.accentColor, in: RoundedRectangle(cornerRadius: 20))
+                .background(Color.manor.primary, in: RoundedRectangle(cornerRadius: 20))
 
                 // Details
                 VStack(spacing: 0) {
@@ -71,7 +71,7 @@ struct BillSummaryView: View {
                     }(), isLast: true)
                 }
                 .background(.background, in: RoundedRectangle(cornerRadius: 14))
-                .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
+                .shadow(color: Color.manor.background.opacity(0.04), radius: 4, y: 1)
 
                 // Photo
                 if let data = bill.photoData, let image = UIImage(data: data) {

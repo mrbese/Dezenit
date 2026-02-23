@@ -38,7 +38,7 @@ struct EnvelopeAssessmentView: View {
         HStack(spacing: 4) {
             ForEach(0..<totalSteps, id: \.self) { i in
                 Capsule()
-                    .fill(i <= step ? Constants.accentColor : Color.gray.opacity(0.3))
+                    .fill(i <= step ? Color.manor.primary : Color.gray.opacity(0.3))
                     .frame(height: 4)
             }
         }
@@ -162,7 +162,7 @@ struct EnvelopeAssessmentView: View {
                     summaryRow(label: "Weatherstripping", value: info.weatherstripping)
                 }
                 .padding(16)
-                .background(Constants.accentColor.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
+                .background(Color.manor.primary.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Notes (optional)")
@@ -219,10 +219,10 @@ struct EnvelopeAssessmentView: View {
                         Text("Next")
                         Image(systemName: "chevron.right")
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
-                    .background(Constants.accentColor, in: Capsule())
+                    .background(Color.manor.primary, in: Capsule())
                 }
                 .buttonStyle(.plain)
             } else {
@@ -234,10 +234,10 @@ struct EnvelopeAssessmentView: View {
                         Image(systemName: "checkmark")
                         Text("Save")
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.manor.onPrimary)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(Constants.accentColor, in: Capsule())
+                    .background(Color.manor.primary, in: Capsule())
                 }
                 .buttonStyle(.plain)
             }
@@ -276,17 +276,17 @@ struct EnvelopeAssessmentView: View {
                 if selected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title3)
-                        .foregroundStyle(Constants.accentColor)
+                        .foregroundStyle(Color.manor.primary)
                 }
             }
             .padding(14)
             .background(
-                selected ? Constants.accentColor.opacity(0.08) : Color(.systemBackground),
+                selected ? Color.manor.primary.opacity(0.08) : Color(.systemBackground),
                 in: RoundedRectangle(cornerRadius: 14)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .stroke(selected ? Constants.accentColor : Color.gray.opacity(0.2), lineWidth: selected ? 2 : 1)
+                    .stroke(selected ? Color.manor.primary : Color.gray.opacity(0.2), lineWidth: selected ? 2 : 1)
             )
         }
         .buttonStyle(.plain)

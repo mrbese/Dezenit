@@ -71,7 +71,7 @@ struct BillDetailsView: View {
                             Text("Effective Rate")
                             Spacer()
                             Text(String(format: "$%.3f/kWh", rate))
-                                .foregroundStyle(Constants.accentColor)
+                                .foregroundStyle(Color.manor.primary)
                         }
                         let days = Calendar.current.dateComponents([.day], from: billingStart, to: billingEnd).day ?? 30
                         if days > 0 {
